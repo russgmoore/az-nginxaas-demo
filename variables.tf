@@ -27,3 +27,22 @@ variable "owner" {
   description = "Owner email for tag required for objects deployed"
   default     = "ru.moore@f5.com"
 }
+
+variable "name" {
+  description = "Name of NGINXaaS deployment"
+  default = ngxaas
+}
+
+variable "sku" {
+  description = "SKU of NGINXaaS deployment"
+  default = "standard_Monthly"
+}
+
+variable "tags" {
+  description = "Tags for NGINXaaS deployment and related resources."
+  type        = map(any)
+  default = {
+    env = "Development"
+    Owner = "ru.moore@f5.com"
+  }
+}
