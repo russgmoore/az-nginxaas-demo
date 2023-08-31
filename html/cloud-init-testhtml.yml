@@ -1,0 +1,6 @@
+write_files:
+- path: /usr/share/nginx/html/ci.html
+  content: |
+    <p>cloud-init dropped this file!</p>
+  owner: 'nginx:nginx'
+  permissions: '0644'

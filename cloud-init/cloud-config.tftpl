@@ -1,0 +1,9 @@
+#cloud-config
+# This is a cloud init file template
+# At the moment just one variable is passed in, a list of packages
+#  to install.
+
+packages:
+  %{ for p in pkgs ~}
+  - ${p}
+  %{ endfor ~}

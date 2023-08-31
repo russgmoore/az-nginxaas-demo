@@ -1,0 +1,25 @@
+#cloud-config
+# This is a cloud init file to natively install nginx to
+#  serve files.
+# Currently, it is taking about 60 seconds from "terraform apply"
+# to the server working, on a Standard_B1ls instance size.
+write_files:
+    - path: /run/nginx-html/stuff.html
+      owner: root:root
+      permissions: "0644"
+      content: "<p>This is just some stuff, served by nginx from /var/www/html</p>"
+
+packages:
+  - nginx
+
+runcmd:
+    - |
+      echo "*** Starting nginx..."
+    - systemctl enable nginx
+    - systemctl restart nginx
+    - |
+      echo "*** Installing simple HTML content..."
+    # The default document root is /var/www/html for nginx on Ubuntu
+    - sudo mv /run/nginx-html/stuff.html /var/www/html
+    
+    
