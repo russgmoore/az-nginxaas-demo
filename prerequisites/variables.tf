@@ -3,11 +3,6 @@ variable "location" {
   default     = "eastus"
 }
 
-variable "name" {
-  description = "Name of NGINXaaS deployment and related resources."
-  default     = "nginxaas-demo"
-}
-
 variable "tags" {
   description = "Tags for NGINXaaS deployment and related resources."
   type        = map(any)
@@ -15,4 +10,9 @@ variable "tags" {
     env = "Dev"
     Owner = "ru.moore@f5.com"
   }
+}
+
+variable "name" {
+  description = "Name of NGINXaaS deployment"
+  default = "ngxaas"
 }
