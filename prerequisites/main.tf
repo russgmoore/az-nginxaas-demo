@@ -1,22 +1,22 @@
-resource "azurerm_resource_group" "example" {
+resource "azurerm_resource_group" "rg" {
   name     = var.name
   location = var.location
 
   tags = var.tags
 }
 
-resource "azurerm_public_ip" "example" {
+resource "azurerm_public_ip" "ngxaas-publicip" {
   name                = var.name
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   sku                 = "Standard"
   allocation_method   = "Static"
 }
 
 resource "azurerm_virtual_network" "example" {
   name                = var.name
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
   address_space       = ["10.0.0.0/16"]
 
   tags = var.tags
@@ -24,8 +24,8 @@ resource "azurerm_virtual_network" "example" {
 
 resource "azurerm_subnet" "example" {
   name                 = var.name
-  resource_group_name  = azurerm_resource_group.example.name
-  virtual_network_name = azurerm_virtual_network.example.name
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.rg.name
   address_prefixes     = ["10.0.1.0/24"]
   delegation {
     name = "nginx"
@@ -38,36 +38,4 @@ resource "azurerm_subnet" "example" {
   }
 }
 
-# WARNING: This opens up the NSG to allow traffic to deployment from anywhere.
-resource "azurerm_network_security_group" "example" {
-  name                = var.name
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
 
-  security_rule {
-    name                       = var.name
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  tags = var.tags
-}
-
-resource "azurerm_subnet_network_security_group_association" "example" {
-  subnet_id                 = azurerm_subnet.example.id
-  network_security_group_id = azurerm_network_security_group.example.id
-}
-
-resource "azurerm_user_assigned_identity" "example" {
-  location            = azurerm_resource_group.example.location
-  name                = var.name
-  resource_group_name = azurerm_resource_group.example.name
-
-  tags = var.tags
-}
