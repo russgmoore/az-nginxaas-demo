@@ -30,7 +30,7 @@ variable "owner" {
 
 variable "name" {
   description = "Name of NGINXaaS deployment"
-  default = ngxaas
+  default = "ngxaas"
 }
 
 variable "sku" {
