@@ -1,19 +1,13 @@
-module "prerequisites" {
-  source   = "./prerequisites"
-  location = var.location
-  name     = var.name
-  tags     = var.tags
-}
+
 
 resource "azurerm_resource_group" "rg" {
   name     = "ru-moore-nginx1"
   location = var.location
-  tags = {
-    Owner = var.owner
-  }
+  tags = var.tags
 }
+
 resource "azurerm_network_security_group" "allowedports" {
-  name                = "allowedports"
+  name                = "allllowedports"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
@@ -53,8 +47,39 @@ resource "azurerm_network_security_group" "allowedports" {
     destination_address_prefix = "*"
   }
 
-  tags = {
-    Owner = var.owner
+  tags = var.tags
+}
+
+resource "azurerm_public_ip" "ngxaas-publicip" {
+  name                = "ngxaas-publicip"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "Standard"
+  allocation_method   = "Static"
+}
+
+resource "azurerm_virtual_network" "nginxvnet" {
+  name                = "nginxvnet"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = ["10.0.0.0/16"]
+
+  tags = var.tags
+}
+
+resource "azurerm_subnet" "nginx-subnet" {
+  name                 = "nginx-subnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.nginxvnet.name
+  address_prefixes     = ["10.0.1.0/24"]
+  delegation {
+    name = "nginx"
+    service_delegation {
+      name = "NGINX.NGINXPLUS/nginxDeployments"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action"
+      ]
+    }
   }
 }
 
@@ -64,10 +89,7 @@ resource "azurerm_public_ip" "webserver1_public_ip" {
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
 
-  tags = {
-    environment = var.environment
-    owner       = var.owner
-  }
+  tags = var.tags
 
   depends_on = [azurerm_resource_group.rg]
 }
@@ -80,15 +102,13 @@ resource "azurerm_network_interface" "webserver1" {
   ip_configuration {
     name                          = "internal"
     private_ip_address_allocation = "Dynamic"
-    subnet_id                     = module.network.vnet_subnets[0]
+    subnet_id                     = azurerm_subnet.nginx-subnet.id
     public_ip_address_id          = azurerm_public_ip.webserver1_public_ip.id
   }
 
   depends_on = [azurerm_resource_group.rg]
 
-  tags = {
-    Owner = var.owner
-  }
+  tags = var.tags
 }
 
 
@@ -98,10 +118,7 @@ resource "azurerm_public_ip" "webserver2_public_ip" {
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
 
-  tags = {
-    environment = var.environment
-    owner       = var.owner
-  }
+  tags = var.tags
 
   depends_on = [azurerm_resource_group.rg]
 }
@@ -114,15 +131,13 @@ resource "azurerm_network_interface" "webserver2" {
   ip_configuration {
     name                          = "internal"
     private_ip_address_allocation = "Dynamic"
-    subnet_id                     = module.network.vnet_subnets[0]
+    subnet_id                     = azurerm_subnet.nginx-subnet.id
     public_ip_address_id          = azurerm_public_ip.webserver2_public_ip.id
   }
 
   depends_on = [azurerm_resource_group.rg]
 
-  tags = {
-    Owner = var.owner
-  }
+  tags = var.tags
 }
 
 resource "azurerm_linux_virtual_machine" "nginx1" {
@@ -160,10 +175,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
     storage_account_type = "Standard_LRS"
   }
 
-  tags = {
-    environment = var.environment
-    Owner       = var.owner
-  }
+  tags = var.tags
 
   depends_on = [azurerm_resource_group.rg]
 }
@@ -203,10 +215,24 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
     storage_account_type = "Standard_LRS"
   }
 
-  tags = {
-    environment = var.environment
-    Owner       = var.owner
-  }
+  tags = var.tags
 
   depends_on = [azurerm_resource_group.rg]
+}
+
+resource "azurerm_nginx_deployment" "nginxaas-demo" {
+  name                     = "nginxaas-demo"
+  resource_group_name      = azurerm_resource_group.rg.name
+  sku                      = var.sku
+  location                 = var.location
+  diagnose_support_enabled = true
+
+  frontend_public {
+    ip_address = [azurerm_public_ip.ngxaas-publicip.id]
+  }
+  network_interface {
+    subnet_id = azurerm_subnet.nginx-subnet.id
+  }
+
+  tags = var.tags
 }
