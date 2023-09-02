@@ -26,6 +26,7 @@ mv /var/tmp/demo-index.html /usr/share/nginx/html/demo-index.html
 rm /usr/share/nginx/html/index.html
 mv /var/tmp/app.conf /etc/nginx/conf.d/app.conf
 rm /etc/nginx/sites-enabled/default
+echo "VF-ReadytoServe" > /usr/share/nginx/html/healthz.html
 sed -i 's/Hello World - App X.*/Hello World - App ${nginxinstance}\<\/title\>/g' /usr/share/nginx/html/demo-index.html
 echo "[INFO] ${nginxinstance} <- what number?"
 

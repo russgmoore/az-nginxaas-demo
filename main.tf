@@ -251,9 +251,3 @@ resource "azurerm_nginx_deployment" "nginxaas-demo" {
 
   tags = var.tags
 }
-
-resource "azurerm_role_assignment" "role-assign" {
-  scope                = azurerm_nginx_deployment.nginxaas-demo.id
-  role_definition_name = "Monitoring Metrics Publisher"
-  principal_id         = azurerm_user_assigned_identity.id-nginxaas.principal_id
-}
