@@ -17,7 +17,7 @@ echo "PCFET0NUWVBFIGh0bWw+CjxodG1sPgogICAgPGhlYWQ+CiAgICAgICAgPHRpdGxlPkhlbGxvIF
 echo "[INFO] Creating /var/tmp/app.txt"
 echo "c2VydmVyIHsKICAgIGxpc3RlbiA4MCBkZWZhdWx0X3NlcnZlcjsKICAgIHNlcnZlcl9uYW1lIGFwcF9zZXJ2ZXI7CgogICAgcm9vdCAvdXNyL3NoYXJlL25naW54L2h0bWw7CiAgICBlcnJvcl9sb2cgL3Zhci9sb2cvbmdpbngvYXBwLXNlcnZlci1lcnJvci5sb2cgbm90aWNlOwogICAgaW5kZXggZGVtby1pbmRleC5odG1sIGluZGV4Lmh0bWw7CiAgICBleHBpcmVzIC0xOwoKICAgIHN1Yl9maWx0ZXJfb25jZSBvZmY7CiAgICBzdWJfZmlsdGVyICdzZXJ2ZXJfaG9zdG5hbWUnICckaG9zdG5hbWUnOwogICAgc3ViX2ZpbHRlciAnc2VydmVyX2FkZHJlc3MnICAnJHNlcnZlcl9hZGRyOiRzZXJ2ZXJfcG9ydCc7CiAgICBzdWJfZmlsdGVyICdzZXJ2ZXJfdXJsJyAgICAgICckcmVxdWVzdF91cmknOwogICAgc3ViX2ZpbHRlciAncmVtb3RlX2FkZHInICAgICAnJHJlbW90ZV9hZGRyOiRyZW1vdGVfcG9ydCc7CiAgICBzdWJfZmlsdGVyICdzZXJ2ZXJfZGF0ZScgICAgICckdGltZV9sb2NhbCc7CiAgICBzdWJfZmlsdGVyICdjbGllbnRfYnJvd3NlcicgICckaHR0cF91c2VyX2FnZW50JzsKICAgIHN1Yl9maWx0ZXIgJ3JlcXVlc3RfaWQnICAgICAgJyRyZXF1ZXN0X2lkJzsKICAgIHN1Yl9maWx0ZXIgJ25naW54X3ZlcnNpb24nICAgJyRuZ2lueF92ZXJzaW9uJzsKICAgIHN1Yl9maWx0ZXIgJ2RvY3VtZW50X3Jvb3QnICAgJyRkb2N1bWVudF9yb290JzsKICAgIHN1Yl9maWx0ZXIgJ3Byb3hpZWRfZm9yX2lwJyAgJyRodHRwX3hfZm9yd2FyZGVkX2Zvcic7Cn0=" | cat > /var/tmp/app.txt
 
-echo "[INFO] base64decode text files into demo-index.html and app.conf
+echo "[INFO] base64decode text files into demo-index.html and app.conf"
 base64 -d /var/tmp/demo.txt > /var/tmp/demo-index.html
 base64 -d /var/tmp/app.txt > /var/tmp/app.conf
 
@@ -25,6 +25,9 @@ echo "[INFO] place demo-index.html and app.conf in their correct locations"
 mv /var/tmp/demo-index.html /usr/share/nginx/html/demo-index.html
 rm /usr/share/nginx/html/index.html
 mv /var/tmp/app.conf /etc/nginx/conf.d/app.conf
+rm /etc/nginx/sites-enabled/default
+sed -i 's/Hello World - App X.*/Hello World - App ${nginxinstance}\<\/title\>/g' /usr/share/nginx/html/demo-index.html
+echo "[INFO] ${nginxinstance} <- what number?"
 
 echo "[INFO] restart nginx"
 systemctl restart nginx

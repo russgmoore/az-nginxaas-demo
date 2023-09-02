@@ -12,5 +12,5 @@ data "cloudinit_config" "server_config" {
     content_type = "text/x-shellscript"
     content      = file("scripts/setup-script.sh")
   }
+*/  
 }
-*/

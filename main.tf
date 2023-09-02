@@ -194,7 +194,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
 
   depends_on = [azurerm_resource_group.rg]
 }
-/*
+
 resource "azurerm_linux_virtual_machine" "nginx2" {
   size                = var.instance_size
   name                = "nginx-webserver2"
@@ -204,7 +204,7 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
   #custom_data = filebase64("html/cloud-init-testhtml.yml")
   #custom_data = base64encode(data.cloudinit_config.twofiles.rendered)
   user_data = data.cloudinit_config.server_config.rendered
-  #user_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 } ))
+  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 } )) 
   network_interface_ids = [
     azurerm_network_interface.webserver2.id,
   ]
@@ -235,7 +235,7 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
 
   depends_on = [azurerm_resource_group.rg]
 }
-*/
+
 /*
 
 resource "azurerm_nginx_deployment" "nginxaas-demo" {
