@@ -2,7 +2,7 @@
 resource "azurerm_resource_group" "rg" {
   name     = "nginxaas-demo"
   location = var.location
-  tags = var.tags
+  tags     = var.tags
 }
 
 resource "azurerm_user_assigned_identity" "id-nginxaas" {
@@ -160,7 +160,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   #user_data = data.cloudinit_config.server_config.rendered
-  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 } )) 
+  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 }))
   network_interface_ids = [
     azurerm_network_interface.webserver1.id,
   ]
@@ -197,7 +197,7 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
   name                = "nginx-webserver2"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 } )) 
+  custom_data         = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 }))
   network_interface_ids = [
     azurerm_network_interface.webserver2.id,
   ]

@@ -22,7 +22,7 @@ variable "ssh_key_file" {
 # Define which train we will deploy from for the NGINXaaS version
 variable "sku" {
   description = "SKU of NGINXaaS deployment"
-  default = "standard_Monthly"
+  default     = "standard_Monthly"
 }
 
 # Create a set of standard tags to put on all objects. Owner is required to be set properly or your stuff will be deleted
@@ -30,7 +30,7 @@ variable "tags" {
   description = "Tags for NGINXaaS deployment and related resources."
   type        = map(any)
   default = {
-    env = "Development"
+    env   = "Development"
     Owner = "ru.moore@f5.com"
   }
 }
