@@ -1,6 +1,6 @@
 
 resource "azurerm_resource_group" "rg" {
-  name     = "ru-moore-nginx1"
+  name     = "nginxaas-demo"
   location = var.location
   tags = var.tags
 }
@@ -173,11 +173,11 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
   }
 
   computer_name                   = "nginx1"
-  admin_username                  = "ru-moore-user"
+  admin_username                  = "admin-user"
   disable_password_authentication = true
 
   admin_ssh_key {
-    username   = "ru-moore-user"
+    username   = "admin-user"
     public_key = file("${var.ssh_key_file}")
   }
 
@@ -197,7 +197,6 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
   name                = "nginx-webserver2"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  #user_data = data.cloudinit_config.server_config.rendered
   custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 } )) 
   network_interface_ids = [
     azurerm_network_interface.webserver2.id,
@@ -211,11 +210,11 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
   }
 
   computer_name                   = "nginx2"
-  admin_username                  = "ru-moore-user"
+  admin_username                  = "admin-user"
   disable_password_authentication = true
 
   admin_ssh_key {
-    username   = "ru-moore-user"
+    username   = "admin-user"
     public_key = file("${var.ssh_key_file}")
   }
 
