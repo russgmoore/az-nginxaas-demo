@@ -198,7 +198,7 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   #user_data = data.cloudinit_config.server_config.rendered
-  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 } )) 
+  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 } )) 
   network_interface_ids = [
     azurerm_network_interface.webserver2.id,
   ]
@@ -237,6 +237,11 @@ resource "azurerm_nginx_deployment" "nginxaas-demo" {
   location                 = var.location
   diagnose_support_enabled = true
 
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.id-nginxaas.id]
+  }
+
   frontend_public {
     ip_address = [azurerm_public_ip.ngxaas-publicip.id]
   }
@@ -245,4 +250,10 @@ resource "azurerm_nginx_deployment" "nginxaas-demo" {
   }
 
   tags = var.tags
+}
+
+resource "azurerm_role_assignment" "role-assign" {
+  scope                = azurerm_nginx_deployment.nginxaas-demo.id
+  role_definition_name = "Monitoring Metrics Publisher"
+  principal_id         = azurerm_user_assigned_identity.id-nginxaas.principal_id
 }
