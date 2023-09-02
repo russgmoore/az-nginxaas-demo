@@ -1,13 +1,20 @@
 
-
 resource "azurerm_resource_group" "rg" {
   name     = "ru-moore-nginx1"
   location = var.location
   tags = var.tags
 }
 
-resource "azurerm_network_security_group" "allowedports" {
-  name                = "allllowedports"
+resource "azurerm_user_assigned_identity" "id-nginxaas" {
+  location            = azurerm_resource_group.rg.location
+  name                = "id-nginxaas"
+  resource_group_name = azurerm_resource_group.rg.name
+
+  tags = var.tags
+}
+
+resource "azurerm_network_security_group" "sg-allowedin" {
+  name                = "sg-allowedin"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 
@@ -83,6 +90,11 @@ resource "azurerm_subnet" "nginx-subnet" {
   }
 }
 
+resource "azurerm_subnet_network_security_group_association" "sg-assoc" {
+  subnet_id                 = azurerm_subnet.nginx-subnet.id
+  network_security_group_id = azurerm_network_security_group.sg-allowedin.id
+}
+
 resource "azurerm_public_ip" "webserver1_public_ip" {
   name                = "webserver1_public_ip"
   location            = var.location
@@ -101,9 +113,10 @@ resource "azurerm_network_interface" "webserver1" {
 
   ip_configuration {
     name                          = "internal"
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
     subnet_id                     = azurerm_subnet.nginx-subnet.id
     public_ip_address_id          = azurerm_public_ip.webserver1_public_ip.id
+    private_ip_address            = "10.0.1.10"
   }
 
   depends_on = [azurerm_resource_group.rg]
@@ -130,9 +143,10 @@ resource "azurerm_network_interface" "webserver2" {
 
   ip_configuration {
     name                          = "internal"
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
     subnet_id                     = azurerm_subnet.nginx-subnet.id
     public_ip_address_id          = azurerm_public_ip.webserver2_public_ip.id
+    private_ip_address            = "10.0.1.11"
   }
 
   depends_on = [azurerm_resource_group.rg]
@@ -149,6 +163,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
   #custom_data = filebase64("html/cloud-init-testhtml.yml")
   #custom_data = base64encode(data.cloudinit_config.twofiles.rendered)
   user_data = data.cloudinit_config.server_config.rendered
+  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 } )) 
   network_interface_ids = [
     azurerm_network_interface.webserver1.id,
   ]
@@ -179,7 +194,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
 
   depends_on = [azurerm_resource_group.rg]
 }
-
+/*
 resource "azurerm_linux_virtual_machine" "nginx2" {
   size                = var.instance_size
   name                = "nginx-webserver2"
@@ -189,6 +204,7 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
   #custom_data = filebase64("html/cloud-init-testhtml.yml")
   #custom_data = base64encode(data.cloudinit_config.twofiles.rendered)
   user_data = data.cloudinit_config.server_config.rendered
+  #user_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 } ))
   network_interface_ids = [
     azurerm_network_interface.webserver2.id,
   ]
@@ -219,6 +235,8 @@ resource "azurerm_linux_virtual_machine" "nginx2" {
 
   depends_on = [azurerm_resource_group.rg]
 }
+*/
+/*
 
 resource "azurerm_nginx_deployment" "nginxaas-demo" {
   name                     = "nginxaas-demo"
@@ -236,3 +254,4 @@ resource "azurerm_nginx_deployment" "nginxaas-demo" {
 
   tags = var.tags
 }
+*/
