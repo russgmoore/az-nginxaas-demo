@@ -31,6 +31,12 @@ variable "tags" {
   type        = map(any)
   default = {
     env   = "Development"
-    Owner = "ru.moore@f5.com"
+    Owner =  "addr@example.com"
   }
+}
+
+variable "azure_rg1" {
+  description = "Resource group name to use"
+  type = string
+  default = "azure-rg1-nginxass"
 }
