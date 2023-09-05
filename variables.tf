@@ -38,5 +38,6 @@ variable "tags" {
 variable "azure_rg1" {
   description = "Resource group name to use"
   type = string
-  default = "azure-rg1-nginxass"
+#  default = "azure-rg1-nginxass"
 }
+
