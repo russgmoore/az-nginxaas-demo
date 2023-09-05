@@ -19,7 +19,7 @@ to it and the public key configured outside of this repo to login.
 The NGINXaaS deployment is configured and set with a public IP and is ready to configure.
 NGINXaaS when provisioned will have a default configuration applied. This will cause Terraform to throw and error during the first apply
 You will need to import the default configuration and do another apply to place your configuration on the system. Alternatively you can 
-just remove the "PUT NAME OF NGINX CONFIG DIRECTIVE HERE" or comment it out. Then apply your configuration throught he Azure Portal.
+just remove the resource **"azurerm_nginx_configuration" "nginxaas-config"** directives or comment it out. Then apply your configuration throught he Azure Portal.
 
 The syntax to import is as follows:
 terraform import "/subscriptions/<SUBSCRIPTIONID>/resourceGroups/<RESOURCEGROUPNAME>/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default"
