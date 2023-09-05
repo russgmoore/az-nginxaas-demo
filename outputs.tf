@@ -1,17 +1,17 @@
-output "demo-app-1_private_ip" {
-  value = azurerm_linux_virtual_machine.demo-app-1.private_ip_address
+output "demo_app_1_private_ip" {
+  value = azurerm_linux_virtual_machine.demo_app_1.private_ip_address
 }
 
-output "demo-app-1_public_ip" {
-  value = azurerm_linux_virtual_machine.demo-app-1.public_ip_address
+output "demo_app_1_public_ip" {
+  value = azurerm_linux_virtual_machine.demo_app_1.public_ip_address
 }
 
-output "demo-app-2_private_ip" {
-  value = azurerm_linux_virtual_machine.demo-app-2.private_ip_address
+output "demo_app_2_private_ip" {
+  value = azurerm_linux_virtual_machine.demo_app_2.private_ip_address
 }
 
-output "demo-app-2_public_ip" {
-  value = azurerm_linux_virtual_machine.demo-app-2.public_ip_address
+output "demo_app_2_public_ip" {
+  value = azurerm_linux_virtual_machine.demo_app_2.public_ip_address
 }
 
 output "ssh_key" {
@@ -25,5 +25,5 @@ output "my_public_ip" {
 
 output "ip_address" {
   description = "IP address of NGINXaaS deployment."
-  value       = azurerm_nginx_deployment.nginxaas-demo.ip_address
+  value       = azurerm_nginx_deployment.nginxaas_demo.ip_address
 }

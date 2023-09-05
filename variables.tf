@@ -36,9 +36,9 @@ variable "tags" {
 }
 
 # Create variable to contain the name of the Azure Resource Group
-variable "azure_rg-1" {
+variable "azure_rg_1" {
   description = "Resource group name to use"
   type = string
-  default = "azure-rg-1-nginxass"
+  default = "azure_rg_1_nginxass"
 }
 

@@ -1,12 +1,12 @@
 
-resource "azurerm_linux_virtual_machine" "demo-app-1" {
+resource "azurerm_linux_virtual_machine" "demo_app_1" {
   size                = var.instance_size
-  name                = "demo-app-1"
+  name                = "demo_app_1"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 }))
   network_interface_ids = [
-    azurerm_network_interface.int-demo-app-1.id,
+    azurerm_network_interface.int_demo_app_1.id,
   ]
 
   source_image_reference {
@@ -26,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "demo-app-1" {
   }
 
   os_disk {
-    name                 = "demo-app-1-disk01"
+    name                 = "demo_app_1_disk01"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
