@@ -1,17 +1,17 @@
-output "nginx1_private_ip" {
-  value = azurerm_linux_virtual_machine.nginx1.private_ip_address
+output "demo-app-1_private_ip" {
+  value = azurerm_linux_virtual_machine.demo-app-1.private_ip_address
 }
 
-output "nginx1_public_ip" {
-  value = azurerm_linux_virtual_machine.nginx1.public_ip_address
+output "demo-app-1_public_ip" {
+  value = azurerm_linux_virtual_machine.demo-app-1.public_ip_address
 }
 
-output "nginx2_private_ip" {
-  value = azurerm_linux_virtual_machine.nginx2.private_ip_address
+output "demo-app-2_private_ip" {
+  value = azurerm_linux_virtual_machine.demo-app-2.private_ip_address
 }
 
-output "nginx2_public_ip" {
-  value = azurerm_linux_virtual_machine.nginx2.public_ip_address
+output "demo-app-2_public_ip" {
+  value = azurerm_linux_virtual_machine.demo-app-2.public_ip_address
 }
 
 output "ssh_key" {
@@ -19,6 +19,7 @@ output "ssh_key" {
 }
 
 output "my_public_ip" {
+  description = "The public IP of the system running terraform"
   value = data.external.myipaddr.result.ip
 }
 

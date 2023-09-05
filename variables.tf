@@ -1,31 +1,31 @@
-# Define the size of the instances for our VMs we will build. For demos these shoudl be small
+# These variables may be defined in terraform.tfvars. SSH Key must be defined
+# Create a variable to contain the instance size used for building the VMs
 variable "instance_size" {
   type        = string
   description = "Azure instance size"
   default     = "Standard_B1ls"
 }
 
-# Define the region for our deployment. You probably want to make sure you use one close to you 
+# Create a variable that contains the Azure Region for this deployment
 variable "location" {
   type        = string
   description = "Region"
   default     = "eastus"
 }
 
-# The public key we will push to our VMs. These should reside outside of your repo!
+# Create a variable that contains the path to our SSH public key for our VMs.
 variable "ssh_key_file" {
   type        = string
   description = "File where existing SSH key is used for loading on instance"
-  default     = "../sshkeys/azure_rsa_key.pub"
 }
 
-# Define which train we will deploy from for the NGINXaaS version
+# Create a variable that will contain the NGINXaaS train to deploy
 variable "sku" {
   description = "SKU of NGINXaaS deployment"
   default     = "standard_Monthly"
 }
 
-# Create a set of standard tags to put on all objects. Owner is required to be set properly or your stuff will be deleted
+# Create a variable that will contain the set of standard tags to put on all objects.
 variable "tags" {
   description = "Tags for NGINXaaS deployment and related resources."
   type        = map(any)
@@ -35,9 +35,10 @@ variable "tags" {
   }
 }
 
-variable "azure_rg1" {
+# Create variable to contain the name of the Azure Resource Group
+variable "azure_rg-1" {
   description = "Resource group name to use"
   type = string
-#  default = "azure-rg1-nginxass"
+  default = "azure-rg-1-nginxass"
 }
 

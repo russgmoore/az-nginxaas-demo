@@ -1,12 +1,12 @@
 
-resource "azurerm_linux_virtual_machine" "nginx1" {
+resource "azurerm_linux_virtual_machine" "demo-app-2" {
   size                = var.instance_size
-  name                = "nginx-webserver1"
+  name                = "demo-app-2"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 }))
+  custom_data         = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 }))
   network_interface_ids = [
-    azurerm_network_interface.int-webserver1.id,
+    azurerm_network_interface.int-demo-app-2.id,
   ]
 
   source_image_reference {
@@ -16,7 +16,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
     version   = "latest"
   }
 
-  computer_name                   = "nginx1"
+  computer_name                   = "demo-app-2"
   admin_username                  = "admin-user"
   disable_password_authentication = true
 
@@ -26,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "nginx1" {
   }
 
   os_disk {
-    name                 = "nginxdisk01"
+    name                 = "demo-app-2-disk01"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }

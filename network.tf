@@ -1,3 +1,5 @@
+# this Network Security Group allows port 80 and 443 and restricts port 22 to your 
+# public IP that we try to determine during the deployment
 resource "azurerm_network_security_group" "sg-allowedin" {
   name                = "sg-allowedin"
   resource_group_name = azurerm_resource_group.rg.name
@@ -42,6 +44,7 @@ resource "azurerm_network_security_group" "sg-allowedin" {
   tags = var.tags
 }
 
+# Create a public IP for NGINXaas
 resource "azurerm_public_ip" "pip-ngxaas" {
   name                = "ngxaas-publicip"
   resource_group_name = azurerm_resource_group.rg.name
@@ -50,6 +53,7 @@ resource "azurerm_public_ip" "pip-ngxaas" {
   allocation_method   = "Static"
 }
 
+# Create a Virtual Network in our resource group and assign the parent IP space
 resource "azurerm_virtual_network" "vnet-nginx" {
   name                = "nginxvnet"
   location            = azurerm_resource_group.rg.location
@@ -59,6 +63,7 @@ resource "azurerm_virtual_network" "vnet-nginx" {
   tags = var.tags
 }
 
+# Create the first subnet for the demo servers and NGINXaas to talk to each other with
 resource "azurerm_subnet" "nginx-subnet" {
   name                 = "nginx-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -75,13 +80,15 @@ resource "azurerm_subnet" "nginx-subnet" {
   }
 }
 
+# Associate the Network Security Group with the Subnet 
 resource "azurerm_subnet_network_security_group_association" "sg-assoc" {
   subnet_id                 = azurerm_subnet.nginx-subnet.id
   network_security_group_id = azurerm_network_security_group.sg-allowedin.id
 }
 
-resource "azurerm_public_ip" "pip-webserver1" {
-  name                = "webserver1_public_ip"
+# Create a Public IP for the Demo-App-1 server so we can reach it
+resource "azurerm_public_ip" "pip-demo-app-1" {
+  name                = "demo-app-1_public_ip"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
@@ -91,8 +98,9 @@ resource "azurerm_public_ip" "pip-webserver1" {
   depends_on = [azurerm_resource_group.rg]
 }
 
-resource "azurerm_network_interface" "int-webserver1" {
-  name                = "nginx-interface1"
+# Create the Demo-App1 webserver network interface
+resource "azurerm_network_interface" "int-demo-app-1" {
+  name                = "demo-app-1-int"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -100,7 +108,7 @@ resource "azurerm_network_interface" "int-webserver1" {
     name                          = "internal"
     private_ip_address_allocation = "Static"
     subnet_id                     = azurerm_subnet.nginx-subnet.id
-    public_ip_address_id          = azurerm_public_ip.pip-webserver1.id
+    public_ip_address_id          = azurerm_public_ip.pip-demo-app-1.id
     private_ip_address            = "10.0.1.10"
   }
 
@@ -110,8 +118,9 @@ resource "azurerm_network_interface" "int-webserver1" {
 }
 
 
-resource "azurerm_public_ip" "pip-webserver2" {
-  name                = "webserver2_public_ip"
+# Create a Public IP for the Demo-App2 server so we can reach it
+resource "azurerm_public_ip" "pip-demo-app-2" {
+  name                = "demo-app-2_public_ip"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Dynamic"
@@ -121,8 +130,9 @@ resource "azurerm_public_ip" "pip-webserver2" {
   depends_on = [azurerm_resource_group.rg]
 }
 
-resource "azurerm_network_interface" "int-webserver2" {
-  name                = "nginx-interface2"
+# Create the Demo-App2 webserver network interface
+resource "azurerm_network_interface" "int-demo-app-2" {
+  name                = "demo-app-2-int"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -130,7 +140,7 @@ resource "azurerm_network_interface" "int-webserver2" {
     name                          = "internal"
     private_ip_address_allocation = "Static"
     subnet_id                     = azurerm_subnet.nginx-subnet.id
-    public_ip_address_id          = azurerm_public_ip.pip-webserver2.id
+    public_ip_address_id          = azurerm_public_ip.pip-demo-app-2.id
     private_ip_address            = "10.0.1.11"
   }
 
