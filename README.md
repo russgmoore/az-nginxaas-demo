@@ -12,10 +12,9 @@ You should change the azure-rgi-1 variable to something unique as others may be 
 Two ngninx OSS web servers are deployed. 
 These demo app servers are defined in the terraform files:
 
-
 **nginxoss-vm-demo-app-1.tf** 
-**nginxoss-vm-demo-app-2.tf** 
 
+**nginxoss-vm-demo-app-2.tf** 
 
 The Linux VMs are deployed and configured as Demo App servers as defined in:
 https://docs.nginx.com/nginx/deployment-guides/setting-up-nginx-demo-environment/
