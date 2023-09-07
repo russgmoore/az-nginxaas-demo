@@ -1,0 +1,23 @@
+# These are the values we will use for the deployment
+# they are substituded in at run time 
+
+# Set your Azure Region for the deployment
+location = "eastus"
+
+# Set your SKU train for NGINXaaS 
+sku = "standard_Monthly"
+
+# This must be set! Define your public key used for
+# SSH access to the demo_app Linux VMs
+ssh_key_file = "../sshkeys/azure_rsa_key.pub"
+
+# Set the name of the Azure Resource Group to build
+# This should be something unique!
+azure_rg_1 = "rg_nginxaas_demo"
+
+# Define the values for the tags used on objects deployed
+# Owner is required to prevent automatic deletion of your 
+# objects
+tags = { env = "Development"
+         Owner = "user@domain"
+    }
