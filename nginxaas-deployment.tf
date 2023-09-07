@@ -1,5 +1,5 @@
-resource "azurerm_nginx_deployment" "nginxaas_demo" {
-  name                     = "nginxaas_demo"
+resource "azurerm_nginx_deployment" "nginxaas-demo" {
+  name                     = "nginxaas-demo"
   resource_group_name      = azurerm_resource_group.rg.name
   sku                      = var.sku
   location                 = var.location
@@ -21,8 +21,8 @@ resource "azurerm_nginx_deployment" "nginxaas_demo" {
 }
 
 /*
-resource "azurerm_nginx_configuration" "nginxaas_config" {
-  nginx_deployment_id = azurerm_nginx_deployment.nginxaas_demo.id
+resource "azurerm_nginx_configuration" "nginxaas-config" {
+  nginx_deployment_id = azurerm_nginx_deployment.nginxaas-demo.id
   root_file           = "/etc/nginx/nginx.conf"
 
   config_file {

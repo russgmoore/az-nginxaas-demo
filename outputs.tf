@@ -25,5 +25,5 @@ output "my_public_ip" {
 
 output "ip_address" {
   description = "IP address of NGINXaaS deployment."
-  value       = azurerm_nginx_deployment.nginxaas_demo.ip_address
+  value       = azurerm_nginx_deployment.nginxaas-demo.ip_address
 }
