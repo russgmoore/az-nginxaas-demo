@@ -1,4 +1,7 @@
-#create container 2 
+# create container 2
+# for some reason, when deploying two echo containers to the same group, one always fails
+# I haven't spent any time trying to figure out why so I just create two container groups
+# brute force is the hammer I had at the moment, don't judge me. :)
 resource "azurerm_container_group" "container2" {
   name                = "${var.container_group_name_prefix}-${random_string.container_name2.result}"
   location            = azurerm_resource_group.rg.location
