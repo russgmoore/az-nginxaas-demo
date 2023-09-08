@@ -80,6 +80,23 @@ resource "azurerm_subnet" "nginx_subnet" {
   }
 }
 
+# Create the first subnet for the containers
+resource "azurerm_subnet" "container" {
+  name                 = "container"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet_nginx.name
+  address_prefixes     = ["10.0.2.0/24"]
+  delegation {
+    name = "container"
+    service_delegation {
+      name = "Microsoft.ContainerInstance/containerGroups"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action"
+      ]
+    }
+  }
+}
+
 # Associate the Network Security Group with the Subnet 
 resource "azurerm_subnet_network_security_group_association" "sg_assoc" {
   subnet_id                 = azurerm_subnet.nginx_subnet.id
@@ -117,7 +134,6 @@ resource "azurerm_network_interface" "int_demo_app_1" {
   tags = var.tags
 }
 
-
 # Create a Public IP for the Demo_App2 server so we can reach it
 resource "azurerm_public_ip" "pip_demo_app_2" {
   name                = "demo_app_2_public_ip"
@@ -148,3 +164,4 @@ resource "azurerm_network_interface" "int_demo_app_2" {
 
   tags = var.tags
 }
+

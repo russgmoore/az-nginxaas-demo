@@ -1,12 +1,29 @@
+# Create a random name for naming the Resource Group
+resource "random_pet" "rg_name" {
+  prefix = var.resource_group_name_prefix
+}
 
-# Create a resource group to place everything into
+# Create a randomly named Resource Group
 resource "azurerm_resource_group" "rg" {
-  # the resource group name is defined in the terraform.tfvars pick something unique!
-  name     = var.azure_rg_1
-  # the Azure location is defined in the terraform.tfvars pick something close
+  name     = random_pet.rg_name.id
   location = var.location
-  # the tags used on all resources are, you guessed it, defined in the terraform.tfvars file
-  tags     = var.tags
+  tags = var.tags
+}
+
+# Create a random string for container1 naming
+resource "random_string" "container_name1" {
+  length  = 25
+  lower   = true
+  upper   = false
+  special = false
+}
+
+# Create a random string for container2 naming
+resource "random_string" "container_name2" {
+  length  = 25
+  lower   = true
+  upper   = false
+  special = false
 }
 
 # We need to create an identity for NGINXaaS 
@@ -18,4 +35,6 @@ resource "azurerm_user_assigned_identity" "id_nginxaas" {
 
   tags = var.tags
 }
+
+
 
