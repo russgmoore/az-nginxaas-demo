@@ -42,19 +42,14 @@ https://docs.nginx.com/nginxaas/azure/known-issues/
 
 If you wish to deploy a configuration with this repo's code. You will need to import the default configuration and do another apply to place your configuration on the system. 
 
-To import the existing configuration you can run the following command ( *the below is all one line* ):
-
-`terraform import /subscriptions/SUBSCRIPTIONID/resourceGroups/RESOURCEGROUPNAME/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default`
-
-**NOTE:** Replace the "SUBSCRIPTIONID" and "RESOURCEGROUPNAME" with the proper data from your subscription and resource group name
-
+Edit the "nginxaas-deployment.tf" and uncomment the area as described in the below section.
 ### Deploy a configuration with Terraform
 Due the pre-existing NGINXaaS configuration, this repo has the following section commented out in **nginxaas-deployment.tf** to avoid this issue.
 
 ```
 /* <- this starts a comment block. Remove this and the trailing to enable.
-resource "azurerm_nginx_configuration" "nginxaas_config" {
-  nginx_deployment_id = azurerm_nginx_deployment.nginxaas_demo.id
+resource "azurerm_nginx_configuration" "nginxaas-config" {
+  nginx_deployment_id = azurerm_nginx_deployment.nginxaas-demo.id
   root_file           = "/etc/nginx/nginx.conf"
 
   config_file {
@@ -70,6 +65,24 @@ resource "azurerm_nginx_configuration" "nginxaas_config" {
 */ <- This ends the comment block. Remove to enable deploying the defined configuration.
 ```
 
-After importing the default configuration, uncomment the section as illustrated above.
+After you uncomment this section you can run your Terraform again. This time it will give you and error with the Object ID of the existing config.
 
-Then run "terraform apply" again and your configuration will be applied.
+```
+│ Error: A resource with the ID "/subscriptions/<SUBSCRIPTION>/resourceGroups/<RESOURCEGROUPNAME>/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_nginx_configuration" for more information.
+│ 
+│   with azurerm_nginx_configuration.nginxaas-config,
+│   on nginxaas-deployment.tf line 24, in resource "azurerm_nginx_configuration" "nginxaas-config":
+│   24: resource "azurerm_nginx_configuration" "nginxaas-config" {
+│ 
+│ A resource with the ID "/subscriptions/<SUBSCRIPTION>/resourceGroups/<RESOURCEGROUPNAME>/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default" already exists - to be managed
+│ via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_nginx_configuration" for more information.
+╵
+```
+
+To import the existing configuration you can run the following command ( *the below is all one line* ):
+
+`terraform import nginxaas-config /subscriptions/SUBSCRIPTIONID/resourceGroups/RESOURCEGROUPNAME/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default`
+
+**NOTE:** Replace the "SUBSCRIPTIONID" and "RESOURCEGROUPNAME" with the proper data from your subscription and resource group name
+
+After importing the default configuration, you can use Terraform to apply your plan and your nginx.conf file will be installed if there are no issues with it.
