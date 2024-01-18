@@ -40,7 +40,6 @@ resource "azurerm_key_vault_certificate" "demo-f5net-com" {
   }
   tags = var.tags
 }
-
 resource "azurerm_nginx_certificate" "demo-f5net-com" {
   name                     = "democert"
   nginx_deployment_id      = azurerm_nginx_deployment.nginxaas-demo.id

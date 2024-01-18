@@ -35,4 +35,4 @@ resource "azurerm_nginx_configuration" "nginxaas-config" {
     virtual_path = "/etc/nginx/site/api.conf"
   }
 }
-i*/
+*/
