@@ -1,54 +1,81 @@
 data "azurerm_client_config" "current" {}
 
+# This keyvault is NOT firewalled.
 resource "azurerm_key_vault" "keyvault" {
-  name                   = "keyvaultnginxaas"
+  name                   = "vault-random"
   location               = var.location
   resource_group_name    = azurerm_resource_group.rg.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
-  sku_name            = "premium"
+  enable_rbac_authorization = true
+  soft_delete_retention_days = 7
+  purge_protection_enabled   = false
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
+  sku_name = "standard"
 
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-    ]
-
-  }
   tags = var.tags
 }
 
-resource "azurerm_key_vault_access_policy" "keyvault-policy1" {
-  key_vault_id = azurerm_key_vault.keyvault.id
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = azurerm_user_assigned_identity.id_nginxaas.principal_id
+# This will give the current user admin permissions on the key vault
+resource "azurerm_role_assignment" "current_user" {
+  scope                = azurerm_key_vault.keyvault.id
+  role_definition_name = "Key Vault Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
 
-  key_permissions = [ "Get",]
-  secret_permissions = [ "Get",]
-  certificate_permissions = [
-    "Create",
-    "Delete",
-    "DeleteIssuers",
-    "Get",
-    "GetIssuers",
-    "Import",
-    "List",
-    "ListIssuers",
-    "ManageContacts",
-    "ManageIssuers",
-    "SetIssuers",
-    "Update",
-    ]
+resource "azurerm_key_vault_certificate" "example" {
+  name         = "examplecertificate"
+  key_vault_id = azurerm_key_vault.keyvault.id
+
+  certificate_policy {
+    issuer_parameters {
+      name = "Self"
+    }
+
+    key_properties {
+      exportable = true
+      key_size   = 2048
+      key_type   = "RSA"
+      reuse_key  = false
+    }
+
+    lifetime_action {
+      action {
+        action_type = "AutoRenew"
+      }
+
+      trigger {
+        days_before_expiry = 30
+      }
+    }
+
+    secret_properties {
+      content_type = "application/x-pem-file"
+    }
+
+    x509_certificate_properties {
+      extended_key_usage = [
+        "1.3.6.1.5.5.7.3.1",
+        "1.3.6.1.5.5.7.3.2"
+      ]
+
+      key_usage = [
+        "cRLSign",
+        "dataEncipherment",
+        "digitalSignature",
+        "keyAgreement",
+        "keyCertSign",
+        "keyEncipherment",
+      ]
+
+      subject            = "CN=example.com"
+      validity_in_months = 12
+    }
+  }
+  depends_on = [azurerm_role_assignment.current_user]
+}
+
+resource "azurerm_role_assignment" "nginxaas-role" {
+  scope                = azurerm_key_vault.keyvault.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = azurerm_user_assigned_identity.id_nginxaas.principal_id
 }
