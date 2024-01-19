@@ -1,11 +1,10 @@
 # Create a random name for naming the Resource Group
-resource "random_pet" "rg_name" {
-  prefix = var.resource_group_name_prefix
+resource "random_pet" "pet" {
 }
 
 # Create a randomly named Resource Group
 resource "azurerm_resource_group" "rg" {
-  name     = random_pet.rg_name.id
+  name     = "rg-${random_pet.pet.id}"
   location = var.location
   tags = var.tags
 }
@@ -35,6 +34,3 @@ resource "azurerm_user_assigned_identity" "id_nginxaas" {
 
   tags = var.tags
 }
-
-
-

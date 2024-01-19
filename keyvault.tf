@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 
 # This keyvault is NOT firewalled.
 resource "azurerm_key_vault" "keyvault" {
-  name                   = "vault-random"
+  name                   = "keyvault-${random_pet.pet.id}"
   location               = var.location
   resource_group_name    = azurerm_resource_group.rg.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
@@ -16,6 +16,9 @@ resource "azurerm_key_vault" "keyvault" {
 }
 
 # This will give the current user admin permissions on the key vault
+# The current user is defined as the credentials terraform is using to
+# perform these tasks. This may not be appropriate in a production environment.
+# Always be sure to understand the access of each user/role to a key vault.
 resource "azurerm_role_assignment" "current_user" {
   scope                = azurerm_key_vault.keyvault.id
   role_definition_name = "Key Vault Administrator"
@@ -72,6 +75,7 @@ resource "azurerm_key_vault_certificate" "example" {
     }
   }
   depends_on = [azurerm_role_assignment.current_user]
+  tags = var.tags
 }
 
 resource "azurerm_role_assignment" "nginxaas-role" {
