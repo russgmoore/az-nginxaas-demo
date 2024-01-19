@@ -78,4 +78,6 @@ resource "azurerm_role_assignment" "nginxaas-role" {
   scope                = azurerm_key_vault.keyvault.id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = azurerm_user_assigned_identity.id_nginxaas.principal_id
+
+  depends_on = [ azurerm_user_assigned_identity.id_nginxaas ]
 }
