@@ -1,7 +1,7 @@
 
 resource "azurerm_linux_virtual_machine" "linuxapp-1" {
   size                = var.instance_size
-  name                = "linux_app1-${pet_name.pet.id}"
+  name                = "linux_app1-${random_pet.pet.id}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 }))
