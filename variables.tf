@@ -90,7 +90,6 @@ variable "location" {
   default     = "eastus"
 }
 
-
 # Create a variable that will contain the NGINXaaS train to deploy
 variable "sku" {
   description = "SKU of NGINXaaS deployment"
