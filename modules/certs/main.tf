@@ -2,9 +2,9 @@ data "azurerm_client_config" "current" {}
 
 # This keyvault is NOT firewalled.
 resource "azurerm_key_vault" "keyvault" {
-  name                   = "keyvault-${random_pet.pet.id}"
+  name                   = "keyvault-${var.pf}"
   location               = var.location
-  resource_group_name    = azurerm_resource_group.rg.name
+  resource_group_name    = var.resource_group_name
   tenant_id           = data.azurerm_client_config.current.tenant_id
   enable_rbac_authorization = true
   soft_delete_retention_days = 7
@@ -81,7 +81,6 @@ resource "azurerm_key_vault_certificate" "example" {
 resource "azurerm_role_assignment" "nginxaas-role" {
   scope                = azurerm_key_vault.keyvault.id
   role_definition_name = "Key Vault Secrets User"
-  principal_id         = azurerm_user_assigned_identity.id_nginxaas.principal_id
+  principal_id         = var.nginxaas_principal_id
 
-  depends_on = [ azurerm_user_assigned_identity.id_nginxaas ]
 }

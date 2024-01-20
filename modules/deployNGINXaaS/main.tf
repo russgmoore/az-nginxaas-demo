@@ -14,7 +14,7 @@ resource "azurerm_nginx_deployment" "nginxaas-demo" {
     ip_address = [var.nginx_frontend_public_ip_id]
   }
   network_interface {
-    subnet_id = azurerm_subnet.nginx_subnet.id
+    subnet_id = var.nginx_subnet_id
   }
 
   tags = var.tags

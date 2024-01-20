@@ -33,3 +33,10 @@ variable "my_ip_address" {
   description = "Source IP of your machine to allow access to resources during demonstrations"
   default = "127.0.0.1"
 }
+
+# Create a variable to contain the NGINXaaS user ID pricipal information"
+variable "nginxaas_principal_id" {
+  description = "Principal ID the NGINXaaS user identity."
+  type = string
+  default = "nginxaasprincipalid"
+}

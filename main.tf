@@ -37,6 +37,7 @@ module "prerequisites" {
   tags                = var.tags
   location            = var.location
   resource_group_name = local.resource_group_name 
+  my_ip_address       = data.external.myipaddr.result.ip
 }
 
 module "linux_vm_apps" {
@@ -56,9 +57,18 @@ module "deployNGINXaaS" {
   resource_group_name           = local.resource_group_name 
   pf                            = local.pf
   tags                          = var.tags
-  location                      = module.prerequisites.location
+  location                      = var.location
   nginx_user_id                 = module.prerequisites.nginxaas_user_id
   nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
   nginx_frontend_public_ip_id   = module.prerequisites.nginx_frontend_public_ip_id
   nginx_subnet_id               = module.prerequisites.nginx_subnet_id
+}
+
+module "certs" {
+  source                        = "./modules/certs"
+  resource_group_name           = local.resource_group_name 
+  pf                            = local.pf
+  tags                          = var.tags
+  location                      = var.location
+  nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
 }

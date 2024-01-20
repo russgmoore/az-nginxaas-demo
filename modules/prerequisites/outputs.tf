@@ -23,11 +23,6 @@ output "nginx_subnet_id" {
   value       = azurerm_subnet.nginx_subnet.id
 }
 
-output "location" {
-  description = "Location of the resource group"
-  value       = data.azurerm_resource_group.example.location
-}
-
 output "linux_demoapp1_interface_id" {
   description = "Linux Demostration application 1 Interface ID"
   value       = azurerm_network_interface.int_demo_app_1.id

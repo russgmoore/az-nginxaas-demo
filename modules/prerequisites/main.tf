@@ -3,7 +3,7 @@
 # We need to create an identity for NGINXaaS 
 # see: https://docs.nginx.com/nginxaas/azure/getting-started/managed-identity/
 resource "azurerm_user_assigned_identity" "id_nginxaas" {
-  location            = location
+  location            = var.location
   name                = "id_nginxaas-${var.pf}"
   resource_group_name = var.resource_group_name 
 
@@ -49,7 +49,7 @@ resource "azurerm_network_security_group" "sg_allowedin" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = data.external.myipaddr.result.ip
+    source_address_prefix      = var.my_ip_address
     destination_address_prefix = "*"
   }
 
