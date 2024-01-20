@@ -19,7 +19,7 @@ resource "azurerm_nginx_deployment" "nginxaas-demo" {
 
   tags = var.tags
 }
-
+/*
 resource "azurerm_nginx_configuration" "nginxaas-config" {
   nginx_deployment_id = azurerm_nginx_deployment.nginxaas-demo.id
   root_file           = "/etc/nginx/nginx.conf"
@@ -34,3 +34,4 @@ resource "azurerm_nginx_configuration" "nginxaas-config" {
     virtual_path = "/etc/nginx/site/api.conf"
   }
 }
+*/
