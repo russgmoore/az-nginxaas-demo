@@ -15,7 +15,7 @@ output "nginx_frontend_public_ip_id" {
 
 output "nginx_frontend_public_ip" {
   description = "NGINXaaS public IP address."
-  value       = azurerm_public_ip.pip_ngxaas
+  value       = azurerm_public_ip.pip_ngxaas.ip
 }
 
 output "nginx_subnet_id" {
@@ -35,12 +35,12 @@ output "linux_demoapp2_interface_id" {
 
 output "linux_demoapp1_public_ip" {
   description = "Linux Demostration application 1 public IP address"
-  value       = azurerm_public_ip.pip_demo_app_1
+  value       = azurerm_public_ip.pip_demo_app_1.ip_address
 }
 
 output "linux_demoapp2_public_ip" {
   description = "Linux Demostration application 2 public IP address"
-  value       = azurerm_public_ip.pip_demo_app_2
+  value       = azurerm_public_ip.pip_demo_app_2.ip_address
 }
 
 output "container_subnet" {

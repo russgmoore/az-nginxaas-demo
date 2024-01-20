@@ -38,6 +38,8 @@ module "prerequisites" {
   location            = var.location
   resource_group_name = local.resource_group_name 
   my_ip_address       = data.external.myipaddr.result.ip
+
+  depends_on = [ azurerm_resource_group.rg ]
 }
 
 module "linux_vm_apps" {
@@ -49,6 +51,8 @@ module "linux_vm_apps" {
   resource_group_name  = local.resource_group_name
   linux_demoapp1_interface_id = module.prerequisites.linux_demoapp1_interface_id
   linux_demoapp2_interface_id = module.prerequisites.linux_demoapp2_interface_id
+  
+  depends_on = [ module.prerequisites ]
 }
 
 module "deployNGINXaaS" {
@@ -62,6 +66,8 @@ module "deployNGINXaaS" {
   nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
   nginx_frontend_public_ip_id   = module.prerequisites.nginx_frontend_public_ip_id
   nginx_subnet_id               = module.prerequisites.nginx_subnet_id
+
+  depends_on = [ module.prerequisites ]
 }
 
 module "certs" {
@@ -71,4 +77,6 @@ module "certs" {
   tags                          = var.tags
   location                      = var.location
   nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
+
+  depends_on = [ module.prerequisites ]
 }
