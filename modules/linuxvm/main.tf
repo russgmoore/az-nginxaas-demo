@@ -1,12 +1,12 @@
 
 resource "azurerm_linux_virtual_machine" "linuxapp-1" {
   size                = var.instance_size
-  name                = "linux_app1-${random_pet.pet.id}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  name                = "linux_app1-${var.pf}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
   custom_data = base64encode(templatefile("userdata.tftpl", { nginxinstance = 1 }))
   network_interface_ids = [
-    azurerm_network_interface.int_demo_app_1.id,
+    var.linux_demoapp1_interface_id,
   ]
 
   source_image_reference {
@@ -33,7 +33,6 @@ resource "azurerm_linux_virtual_machine" "linuxapp-1" {
 
   tags = var.tags
 
-  depends_on = [azurerm_resource_group.rg]
 }
 
 resource "azurerm_linux_virtual_machine" "linuxapp-2" {
@@ -43,7 +42,7 @@ resource "azurerm_linux_virtual_machine" "linuxapp-2" {
   location            = azurerm_resource_group.rg.location
   custom_data         = base64encode(templatefile("userdata.tftpl", { nginxinstance = 2 }))
   network_interface_ids = [
-    azurerm_network_interface.int_demo_app_2.id,
+    var.linux_demoapp2_interface_id,
   ]
 
   source_image_reference {
@@ -69,6 +68,5 @@ resource "azurerm_linux_virtual_machine" "linuxapp-2" {
   }
 
   tags = var.tags
-
-  depends_on = [azurerm_resource_group.rg]
+  
 }

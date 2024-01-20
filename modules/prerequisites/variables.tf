@@ -20,3 +20,10 @@ variable "pf" {
   type        = string
   description = "Unique Deployment postfix"
 }
+
+# Create a variable to hold the resource group name
+variable "resource_group_name" {
+  type = string
+  description = "Resource Group Name"
+  default = "somerandomstring"
+}

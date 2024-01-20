@@ -4,14 +4,16 @@ resource "random_pet" "pet" {
 
 locals {
   pf = random_pet.pet.id
+  resource_group_name = "rg-${local.pf}"
 }
 
 # Create a randomly named Resource Group
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-${pf}"
+  name     = local.resource_group_name
   location = var.location
   tags = var.tags
 }
+
 
 # Create a random string for container1 naming
 resource "random_string" "container_name1" {
@@ -30,38 +32,33 @@ resource "random_string" "container_name2" {
 }
 
 module "prerequisites" {
-  source              = "./prerequisites"
-  pf                = local.pf
+  source              = "./modules/prerequisites"
+  pf                  = local.pf
   tags                = var.tags
-  resource_group_name = var.resource_group_name
+  location            = var.location
+  resource_group_name = local.resource_group_name 
 }
 
-module "deployments" {
-  source                        = "./deployments"
-  name                          = local.name
-  tags                          = var.tags
+module "linux_vm_apps" {
+  source               = "./modules/linuxvm"
+  ssh_key_file         = var.ssh_key_file
+  pf                   = local.pf
+  tags                 = var.tags
+  location             = var.location
+  resource_group_name  = local.resource_group_name
+  linux_demoapp1_interface_id = module.prerequisites.linux_demoapp1_interface_id
+  linux_demoapp2_interface_id = module.prerequisites.linux_demoapp2_interface_id
+}
+
+module "deployNGINXaaS" {
+  source                        = "./modules/deployNGINXaaS"
   sku                           = var.sku
-  managed_identity_id           = module.prerequisites.managed_identity_id
-  managed_identity_principal_id = module.prerequisites.managed_identity_principal_id
-  public_ip_address_id          = module.prerequisites.public_ip_address_id
-  subnet_id                     = module.prerequisites.subnet_id
+  resource_group_name           = local.resource_group_name 
+  pf                            = local.pf
+  tags                          = var.tags
   location                      = module.prerequisites.location
-  resource_group_name           = var.resource_group_name
-}
-
-module "configurations" {
-  source        = "./configurations"
-  deployment_id = module.deployments.deployment_id
-  configure     = var.configure
-  config_files = {
-    base = {
-      virtual_path = "/etc/nginx/nginx.conf"
-      content      = filebase64("${path.module}/files/https/nginx.conf")
-    }
-    api = {
-      virtual_path = "/etc/nginx/site/api.conf"
-      content      = filebase64("${path.module}/files/https/api.conf")
-    }
-  }
-  depends_on = [module.certificates]
+  nginx_user_id                 = module.prerequisites.nginxaas_user_id
+  nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
+  nginx_frontend_public_ip_id   = module.prerequisites.nginx_frontend_public_ip_id
+  nginx_subnet_id               = module.prerequisites.nginx_subnet_id
 }
