@@ -70,8 +70,8 @@ module "deployNGINXaaS" {
   depends_on = [ module.prerequisites ]
 }
 
-module "certs" {
-  source                        = "./modules/certs"
+module "keyvault" {
+  source                        = "./modules/keyvault"
   resource_group_name           = local.resource_group_name 
   pf                            = local.pf
   tags                          = var.tags
@@ -79,4 +79,12 @@ module "certs" {
   nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
 
   depends_on = [ module.prerequisites ]
+}
+
+module "nginxcertificate" {
+  source                       = "./modules/nginxcertificate"
+  nginxaas_deployment_id       = module.deployNGINXaaS.nginxaas_deployment_id
+  kv_secret_id                 = module.keyvault.kv_secret_id_example
+
+  depends_on = [ module.deployNGINXaaS ]
 }

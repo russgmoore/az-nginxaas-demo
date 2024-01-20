@@ -13,7 +13,7 @@ output "demo_app_1_private_ip" {
 
 output "demo_app_1_public_ip" {
   description = "The Public IP address for Linux VM demonstration application 1"
-  value = module.prerequisites.linux_demoapp1_public_ip
+  value = module.linux_vm_apps.linux_demoapp1_public_ip
 }
 
 output "demo_app_2_private_ip" {
@@ -23,7 +23,7 @@ output "demo_app_2_private_ip" {
 
 output "demo_app_2_public_ip" {
   description = "The Public IP address for Linux VM demonstration application 2"
-  value = module.prerequisites.linux_demoapp2_public_ip
+  value = module.linux_vm_apps.linux_demoapp2_public_ip
 }
 
 output "my_public_ip" {

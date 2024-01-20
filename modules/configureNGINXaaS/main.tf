@@ -14,3 +14,4 @@ resource "azurerm_nginx_configuration" "nginxaas-config" {
   }
 }
 */
+# define the certificate in NGINXaaS
