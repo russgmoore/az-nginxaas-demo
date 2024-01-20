@@ -33,7 +33,7 @@ output "linux_demoapp2_interface_id" {
   value       = azurerm_network_interface.int_demo_app_2.id
 }
 
-output "container_subnet" {
-  description = "Subnet defined for Containers deployment"
-  value = azurerm_subnet.container
+output "container_subnet_id" {
+  description = "Subnet ID defined for Containers deployment"
+  value = azurerm_subnet.container.id
 }

@@ -55,6 +55,17 @@ module "linux_vm_apps" {
   depends_on = [ module.prerequisites ]
 }
 
+module "containers" {
+  source               = "./modules/containers"
+  pf                   = local.pf
+  tags                 = var.tags
+  location             = var.location
+  resource_group_name  = local.resource_group_name
+  az_container_subnet_id = module.prerequisites.container_subnet_id
+  
+  depends_on = [ module.prerequisites ]
+}
+
 module "deployNGINXaaS" {
   source                        = "./modules/deployNGINXaaS"
   sku                           = var.sku
