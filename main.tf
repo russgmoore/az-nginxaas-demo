@@ -86,5 +86,5 @@ module "nginxcertificate" {
   nginxaas_deployment_id       = module.deployNGINXaaS.nginxaas_deployment_id
   kv_secret_id                 = module.keyvault.kv_secret_id_example
 
-  depends_on = [ module.deployNGINXaaS ]
+  depends_on = [ module.deployNGINXaaS, module.keyvault ]
 }
