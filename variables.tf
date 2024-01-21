@@ -13,13 +13,13 @@ variable "port" {
 
 variable "cpu_cores" {
   type        = number
-  description = "The number of CPU cores to allocate to the container."
+  description = "The number of CPU cores to allocate to each container."
   default     = 1
 }
 
 variable "memory_in_gb" {
   type        = number
-  description = "The amount of memory to allocate to the container in gigabytes."
+  description = "The amount of memory to allocate to each container in gigabytes."
   default     = 2
 }
 
@@ -34,7 +34,7 @@ variable "restart_policy" {
 }
 
 variable "tags" {
-  description = "Tags for NGINXaaS deployment and related resources."
+  description = "Tags used on objects created"
   type        = map(any)
   default = {
     env   = "Development"
@@ -44,7 +44,7 @@ variable "tags" {
 
 variable "instance_size" {
   type        = string
-  description = "Azure instance size"
+  description = "Azure Linux VM instance size"
   default     = "Standard_B1ls"
 }
 
@@ -55,7 +55,7 @@ variable "ssh_key_file" {
 
 variable "location" {
   type        = string
-  description = "Region"
+  description = "Azure Region objects will be deployed into"
   default     = "eastus"
 }
 
@@ -89,7 +89,7 @@ variable "nginx_frontend_public_ip_id" {
 }
 
 variable "nginx_subnet_id" {
-  description = "ID of the NGINXaaS Subnet."
+  description = "The ID of the NGINXaaS Subnet."
   type = string
   default = "nginxaassubnet"
 }

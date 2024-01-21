@@ -19,7 +19,7 @@ output "nginx_frontend_public_ip" {
   }
 
 output "nginx_subnet_id" {
-  description = "ID of delegated subnet."
+  description = "The subnet ID delegated for the NGINXaaS deployment."
   value       = azurerm_subnet.nginx_subnet.id
 }
 

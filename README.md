@@ -6,15 +6,14 @@ Configure your terraform environment so that you can access your Azure tenant pe
 Configure the **settings.tfvars** file to customize the deployment. For F5'ers you must define your mail address 
 for the Owner tag or your resources may be deleted without notice.
 
-You should change the azure-rgi-1 variable to something unique as others may be using this template.
+The code generates unique object names to avoid conflicts with others.
 
-## Two Demo APP VMs
+## Two Demo APP VMs in module linuxvm
 Two ngninx OSS web servers are deployed. 
 These demo app servers are defined in the terraform files:
 
-**nginxoss-vm-demo-app-1.tf** 
-
-**nginxoss-vm-demo-app-2.tf** 
+These can be used for demonstrations and tests of failover, traffic rules, and header injection/manipulation.
+These systems are what respond when you open a browser to the "NGINXaaS Public IP" root URI.
 
 The Linux VMs are deployed and configured as Demo App servers as defined in:
 https://docs.nginx.com/nginx/deployment-guides/setting-up-nginx-demo-environment/
@@ -25,6 +24,14 @@ This is shell script that runs through the clout-init process.
 These two demo servers are statically assigned 10.0.1.10 and 10.0.1.11 and both listen on port 80
 Each demo app server will be assigned a public IP, an NSG assigned to allown only your public IP to ssh
 to it and the public key configured outside of this repo to login.
+
+## Two echo containers are deployed via module containers
+
+These two echo server instances are deployed and configured in the nginx.conf file to respond when you issue
+requests to the "NGINXaaS Public IP" and the /container URI.
+
+Echo servers are great to immmediately see all of the related headers and so on that the web servers see when
+you make a request reflected back to you in the page render.
 
 ## NGINXaaS deployment
 The NGINXaaS deployment is configured and set with a public IP and is ready to configure.
@@ -42,30 +49,10 @@ https://docs.nginx.com/nginxaas/azure/known-issues/
 
 If you wish to deploy a configuration with this repo's code. You will need to import the default configuration and do another apply to place your configuration on the system. 
 
-Edit the "nginxaas-deployment.tf" and uncomment the area as described in the below section.
-### Deploy a configuration with Terraform
-Due the pre-existing NGINXaaS configuration, this repo has the following section commented out in **nginxaas-deployment.tf** to avoid this issue.
+Run the "importconfig.sh" script after your first apply and the object should be under management of Terraform at that point.
+Make sure you set the "configure" variable to "true" if you wish to have the next run on Terraform apply to install the configurations as defined in "files".
 
-```
-/* <- this starts a comment block. Remove this and the trailing to enable.
-resource "azurerm_nginx_configuration" "nginxaas-config" {
-  nginx_deployment_id = azurerm_nginx_deployment.nginxaas-demo.id
-  root_file           = "/etc/nginx/nginx.conf"
-
-  config_file {
-    content      = filebase64("${path.module}/nginx.conf")
-    virtual_path = "/etc/nginx/nginx.conf"
-  }
-
-  config_file {
-    content      = filebase64("${path.module}/api.conf")
-    virtual_path = "/etc/nginx/site/api.conf"
-  }
-}
-*/ <- This ends the comment block. Remove to enable deploying the defined configuration.
-```
-
-After you uncomment this section you can run your Terraform again. This time it will give you and error with the Object ID of the existing config.
+The error you may see for this existing configuration will appear similar to the following:
 
 ```
 │ Error: A resource with the ID "/subscriptions/<SUBSCRIPTION>/resourceGroups/<RESOURCEGROUPNAME>/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "azurerm_nginx_configuration" for more information.
@@ -79,10 +66,79 @@ After you uncomment this section you can run your Terraform again. This time it 
 ╵
 ```
 
-To import the existing configuration you can run the following command ( *the below is all one line* ):
-
-`terraform import nginxaas-config /subscriptions/SUBSCRIPTIONID/resourceGroups/RESOURCEGROUPNAME/providers/Nginx.NginxPlus/nginxDeployments/nginxaas-demo/configurations/default`
-
 **NOTE:** Replace the "SUBSCRIPTIONID" and "RESOURCEGROUPNAME" with the proper data from your subscription and resource group name
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-After importing the default configuration, you can use Terraform to apply your plan and your nginx.conf file will be installed if there are no issues with it.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~>3.57 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~>3.0 |
+| <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~>4.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.88.0 |
+| <a name="provider_external"></a> [external](#provider\_external) | 2.3.2 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_configureNGINXaaS"></a> [configureNGINXaaS](#module\_configureNGINXaaS) | ./modules/configureNGINXaaS | n/a |
+| <a name="module_containers"></a> [containers](#module\_containers) | ./modules/containers | n/a |
+| <a name="module_deployNGINXaaS"></a> [deployNGINXaaS](#module\_deployNGINXaaS) | ./modules/deployNGINXaaS | n/a |
+| <a name="module_keyvault"></a> [keyvault](#module\_keyvault) | ./modules/keyvault | n/a |
+| <a name="module_linux_vm_apps"></a> [linux\_vm\_apps](#module\_linux\_vm\_apps) | ./modules/linuxvm | n/a |
+| <a name="module_nginxcertificate"></a> [nginxcertificate](#module\_nginxcertificate) | ./modules/nginxcertificate | n/a |
+| <a name="module_prerequisites"></a> [prerequisites](#module\_prerequisites) | ./modules/prerequisites | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_resource_group.rg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [random_pet.pet](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/pet) | resource |
+| [external_external.myipaddr](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_configure"></a> [configure](#input\_configure) | Workaround for Bug ID-891. Set false to skip configuration. | `bool` | `true` | no |
+| <a name="input_cpu_cores"></a> [cpu\_cores](#input\_cpu\_cores) | The number of CPU cores to allocate to each container. | `number` | `1` | no |
+| <a name="input_image"></a> [image](#input\_image) | Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials. | `string` | `"registry.hub.docker.com/ealen/echo-server:latest"` | no |
+| <a name="input_instance_size"></a> [instance\_size](#input\_instance\_size) | Azure Linux VM instance size | `string` | `"Standard_B1ls"` | no |
+| <a name="input_linux_demoapp1_interface_id"></a> [linux\_demoapp1\_interface\_id](#input\_linux\_demoapp1\_interface\_id) | Linux Demostration application 1 Interface ID | `string` | `"defaultlinuxdemoapp1intid"` | no |
+| <a name="input_linux_demoapp2_interface_id"></a> [linux\_demoapp2\_interface\_id](#input\_linux\_demoapp2\_interface\_id) | Linux Demostration application 2 Interface ID | `string` | `"defaultlinuxdemoapp2intid"` | no |
+| <a name="input_location"></a> [location](#input\_location) | Azure Region objects will be deployed into | `string` | `"eastus"` | no |
+| <a name="input_memory_in_gb"></a> [memory\_in\_gb](#input\_memory\_in\_gb) | The amount of memory to allocate to each container in gigabytes. | `number` | `2` | no |
+| <a name="input_nginx_frontend_public_ip_id"></a> [nginx\_frontend\_public\_ip\_id](#input\_nginx\_frontend\_public\_ip\_id) | ID of the NGINXaaS frontend public IP. | `string` | `"nginxaasfrontendpubipid"` | no |
+| <a name="input_nginx_subnet_id"></a> [nginx\_subnet\_id](#input\_nginx\_subnet\_id) | The ID of the NGINXaaS Subnet. | `string` | `"nginxaassubnet"` | no |
+| <a name="input_nginx_user_id"></a> [nginx\_user\_id](#input\_nginx\_user\_id) | Managed NGINXaas user identity | `string` | `"managednginxaasuserid"` | no |
+| <a name="input_nginxaas_principal_id"></a> [nginxaas\_principal\_id](#input\_nginxaas\_principal\_id) | Principal ID the NGINXaaS user identity. | `string` | `"nginxaasprincipalid"` | no |
+| <a name="input_port"></a> [port](#input\_port) | Port to open on the container and the public IP address. | `number` | `80` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource Group Name | `string` | `"somerandomstring"` | no |
+| <a name="input_restart_policy"></a> [restart\_policy](#input\_restart\_policy) | The behavior of Azure runtime if container has stopped. | `string` | `"Always"` | no |
+| <a name="input_sku"></a> [sku](#input\_sku) | SKU of NGINXaaS deployment | `string` | `"standard_Monthly"` | no |
+| <a name="input_ssh_key_file"></a> [ssh\_key\_file](#input\_ssh\_key\_file) | File where existing SSH key is used for loading on instance | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags used on objects created | `map(any)` | <pre>{<br>  "Owner": "addr@example.com",<br>  "env": "Development"<br>}</pre> | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_NGINX-ip_address"></a> [NGINX-ip\_address](#output\_NGINX-ip\_address) | IP address of NGINXaaS deployment. |
+| <a name="output_container1_ipv4_address"></a> [container1\_ipv4\_address](#output\_container1\_ipv4\_address) | Container 1 private IP address |
+| <a name="output_container2_ipv4_address"></a> [container2\_ipv4\_address](#output\_container2\_ipv4\_address) | Container 2 private IP address |
+| <a name="output_demo_app_1_private_ip"></a> [demo\_app\_1\_private\_ip](#output\_demo\_app\_1\_private\_ip) | The Private IP address for Linux VM demonstration application 1 |
+| <a name="output_demo_app_1_public_ip"></a> [demo\_app\_1\_public\_ip](#output\_demo\_app\_1\_public\_ip) | The Public IP address for Linux VM demonstration application 1 |
+| <a name="output_demo_app_2_private_ip"></a> [demo\_app\_2\_private\_ip](#output\_demo\_app\_2\_private\_ip) | The Private IP address for Linux VM demonstration application 2 |
+| <a name="output_demo_app_2_public_ip"></a> [demo\_app\_2\_public\_ip](#output\_demo\_app\_2\_public\_ip) | The Public IP address for Linux VM demonstration application 2 |
+| <a name="output_my_public_ip"></a> [my\_public\_ip](#output\_my\_public\_ip) | The public IP of the system running Terraform used in Security Group for access control |
+| <a name="output_nginx_default_config_id"></a> [nginx\_default\_config\_id](#output\_nginx\_default\_config\_id) | NGINXaaS deployment default configuration ID |
+<!-- END_TF_DOCS -->

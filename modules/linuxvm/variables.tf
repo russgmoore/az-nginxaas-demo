@@ -1,6 +1,5 @@
-
 variable "tags" {
-  description = "Tags for NGINXaaS deployment and related resources."
+  description = "Tags used on objects created"
   type        = map(any)
   default = {
     env   = "Development"
@@ -10,11 +9,10 @@ variable "tags" {
 
 variable "instance_size" {
   type        = string
-  description = "Azure instance size"
+  description = "Azure Linux VM instance size"
   default     = "Standard_B1ls"
 }
 
-# Create a variable that contains the path to our SSH public key for our VMs.
 variable "ssh_key_file" {
   type        = string
   description = "File where existing SSH key is used for loading on instance"
@@ -22,7 +20,7 @@ variable "ssh_key_file" {
 
 variable "location" {
   type        = string
-  description = "Region"
+  description = "Azure Region used for deployed objects"
   default     = "eastus"
 }
 
@@ -34,7 +32,7 @@ variable "resource_group_name" {
 
 variable "mypet" {
   type        = string
-  description = "Unique Deployment postfix"
+  description = "A unique string appended to ojbect names"
 }
 
 variable "linux_demoapp1_interface_id" {

@@ -1,8 +1,10 @@
 output "container1_ipv4_address" {
+  description = "Container 1 private IP address"
   value = module.containers.container1_ip
 }
 
 output "container2_ipv4_address" {
+  description = "Container 2 private IP address"
   value = module.containers.container2_ip
 }
 
@@ -27,7 +29,7 @@ output "demo_app_2_public_ip" {
 }
 
 output "my_public_ip" {
-  description = "The public IP of the system running terraform"
+  description = "The public IP of the system running Terraform used in Security Group for access control"
   value = data.external.myipaddr.result.ip
 }
 
@@ -37,6 +39,6 @@ output "NGINX-ip_address" {
 }
 
 output "nginx_default_config_id" {
-  description = "ID of default config of the NGINXaaS instance"
+  description = "NGINXaaS deployment default configuration ID"
   value       = "${module.deployNGINXaaS.nginxaas_deployment_id}/configurations/default"
 }

@@ -15,10 +15,6 @@ resource "azurerm_key_vault" "keyvault" {
   tags = var.tags
 }
 
-# This will give the current user admin permissions on the key vault
-# The current user is defined as the credentials terraform is using to
-# perform these tasks. This may not be appropriate in a production environment.
-# Always be sure to understand the access of each user/role to a key vault.
 resource "azurerm_role_assignment" "current_user" {
   scope                = azurerm_key_vault.keyvault.id
   role_definition_name = "Key Vault Administrator"

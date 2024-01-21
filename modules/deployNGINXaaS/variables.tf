@@ -1,6 +1,6 @@
 variable "location" {
   type        = string
-  description = "Region"
+  description = "Azure Region objects are deployed into"
   default     = "eastus"
 }
 
@@ -17,11 +17,11 @@ variable "resource_group_name" {
 
 variable "mypet" {
   type        = string
-  description = "Unique Deployment postfix"
+  description = "A unique string appended to ojbect names"
 }
 
 variable "tags" {
-  description = "Tags for NGINXaaS deployment and related resources."
+  description = "Tags used on objects created"
   type        = map(any)
   default = {
     env   = "Development"
