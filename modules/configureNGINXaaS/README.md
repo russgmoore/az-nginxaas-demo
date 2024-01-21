@@ -25,7 +25,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_config_files"></a> [config\_files](#input\_config\_files) | Config files and paths to include in the NGINXaaS configuration | <pre>map(object({<br>    content      = string<br>    virtual_path = string<br>  }))</pre> | n/a | yes |
 | <a name="input_configure"></a> [configure](#input\_configure) | Workaround for Bug ID-891. Set false to skip configuration. | `bool` | `true` | no |
-| <a name="input_nginxaas_deployment_id"></a> [nginxaas\_deployment\_id](#input\_nginxaas\_deployment\_id) | NGINXaaS deployment ID | `string` | `"nginxaasdeploymentid"` | no |
+| <a name="input_nginxaas_deployment_id"></a> [nginxaas\_deployment\_id](#input\_nginxaas\_deployment\_id) | NGINXaaS deployment ID | `string` | n/a | yes |
 
 ## Outputs
 

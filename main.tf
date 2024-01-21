@@ -26,6 +26,7 @@ module "prerequisites" {
 
 module "linux_vm_apps" {
   source               = "./modules/linuxvm"
+  instance_size        = var.instance_size
   ssh_key_file         = var.ssh_key_file
   mypet                = local.mypet
   tags                 = var.tags
@@ -44,6 +45,11 @@ module "containers" {
   location             = var.location
   resource_group_name  = local.resource_group_name
   az_container_subnet_id = module.prerequisites.container_subnet_id
+  image                = var.image
+  cpu_cores            = var.cpu_cores
+  port                 = var.port
+  memory_in_gb         = var.memory_in_gb
+  restart_policy       = var.restart_policy
   
   depends_on = [ module.prerequisites ]
 }

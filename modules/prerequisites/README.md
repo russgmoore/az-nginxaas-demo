@@ -33,11 +33,11 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_location"></a> [location](#input\_location) | Azure Region objects will be deployed into | `string` | `"eastus"` | no |
-| <a name="input_my_ip_address"></a> [my\_ip\_address](#input\_my\_ip\_address) | Source IP of your machine to allow access to resources during demonstrations | `string` | `"127.0.0.1"` | no |
+| <a name="input_location"></a> [location](#input\_location) | Azure Region objects will be deployed into | `string` | n/a | yes |
+| <a name="input_my_ip_address"></a> [my\_ip\_address](#input\_my\_ip\_address) | Source IP of your machine to allow access to resources during demonstrations | `string` | n/a | yes |
 | <a name="input_mypet"></a> [mypet](#input\_mypet) | A unique string appended to ojbect names | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource Group Name | `string` | `"somerandomstring"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags used on objects created | `map(any)` | <pre>{<br>  "Owner": "addr@example.com",<br>  "env": "Development"<br>}</pre> | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource Group Name | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags used on objects created | `map(any)` | n/a | yes |
 
 ## Outputs
 

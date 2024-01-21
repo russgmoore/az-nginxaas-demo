@@ -1,7 +1,6 @@
 variable "nginxaas_deployment_id" {
   description = "NGINXaaS deployment ID"
   type = string
-  default = "nginxaasdeploymentid"
 }
 
 variable "config_files" {

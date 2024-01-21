@@ -51,7 +51,6 @@ resource "azurerm_network_security_group" "sg_allowedin" {
   tags = var.tags
 }
 
-# Create a public IP for NGINXaas
 resource "azurerm_public_ip" "pip_ngxaas" {
   name                = "ngxaas_publicip-${var.mypet}"
   resource_group_name = var.resource_group_name
@@ -60,7 +59,6 @@ resource "azurerm_public_ip" "pip_ngxaas" {
   allocation_method   = "Static"
 }
 
-# Create a Virtual Network in our resource group and assign the parent IP space
 resource "azurerm_virtual_network" "vnet_nginx" {
   name                = "nginxvnet-${var.mypet}"
   location            = var.location
@@ -70,7 +68,6 @@ resource "azurerm_virtual_network" "vnet_nginx" {
   tags = var.tags
 }
 
-# Create the first subnet for the demo servers and NGINXaas to talk to each other with
 resource "azurerm_subnet" "nginx_subnet" {
   name                 = "nginx_subnet-${var.mypet}"
   resource_group_name  = var.resource_group_name
@@ -87,7 +84,6 @@ resource "azurerm_subnet" "nginx_subnet" {
   }
 }
 
-# Create the first subnet for the containers
 resource "azurerm_subnet" "container" {
   name                 = "container-${var.mypet}"
   resource_group_name  = var.resource_group_name
@@ -104,13 +100,11 @@ resource "azurerm_subnet" "container" {
   }
 }
 
-# Associate the Network Security Group with the Subnet 
 resource "azurerm_subnet_network_security_group_association" "sg_assoc" {
   subnet_id                 = azurerm_subnet.nginx_subnet.id
   network_security_group_id = azurerm_network_security_group.sg_allowedin.id
 }
 
-# Create a Public IP for the Demo_App_1 server so we can reach it
 resource "azurerm_public_ip" "pip_demo_app_1" {
   name                = "demoapp1_publicip-${var.mypet}"
   location            = var.location
@@ -120,7 +114,6 @@ resource "azurerm_public_ip" "pip_demo_app_1" {
 
 }
 
-# Create the Demo_App1 webserver network interface
 resource "azurerm_network_interface" "int_demo_app_1" {
   name                = "demoapp1_int-${var.mypet}"
   location            = var.location
@@ -137,7 +130,6 @@ resource "azurerm_network_interface" "int_demo_app_1" {
   tags = var.tags
 }
 
-# Create a Public IP for the Demo_App2 server so we can reach it
 resource "azurerm_public_ip" "pip_demo_app_2" {
   name                = "demoapp2_publicip-${var.mypet}"
   location            = var.location
@@ -146,7 +138,6 @@ resource "azurerm_public_ip" "pip_demo_app_2" {
   tags = var.tags
 }
 
-# Create the Demo_App2 webserver network interface
 resource "azurerm_network_interface" "int_demo_app_2" {
   name                = "demoapp2_int-${var.mypet}"
   location            = var.location
@@ -161,4 +152,3 @@ resource "azurerm_network_interface" "int_demo_app_2" {
   }
   tags = var.tags
 }
-

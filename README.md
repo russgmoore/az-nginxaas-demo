@@ -3,6 +3,8 @@
 ## Terraform settings
 Configure your terraform environment so that you can access your Azure tenant per your own taste.
 
+You'll need to run "terraform init" and I'd suggest a "terraform plan" to test before applying.
+
 Configure the **settings.tfvars** file to customize the deployment. For F5'ers you must define your mail address 
 for the Owner tag or your resources may be deleted without notice.
 
@@ -67,6 +69,7 @@ The error you may see for this existing configuration will appear similar to the
 ```
 
 **NOTE:** Replace the "SUBSCRIPTIONID" and "RESOURCEGROUPNAME" with the proper data from your subscription and resource group name
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -113,16 +116,9 @@ The error you may see for this existing configuration will appear similar to the
 | <a name="input_cpu_cores"></a> [cpu\_cores](#input\_cpu\_cores) | The number of CPU cores to allocate to each container. | `number` | `1` | no |
 | <a name="input_image"></a> [image](#input\_image) | Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials. | `string` | `"registry.hub.docker.com/ealen/echo-server:latest"` | no |
 | <a name="input_instance_size"></a> [instance\_size](#input\_instance\_size) | Azure Linux VM instance size | `string` | `"Standard_B1ls"` | no |
-| <a name="input_linux_demoapp1_interface_id"></a> [linux\_demoapp1\_interface\_id](#input\_linux\_demoapp1\_interface\_id) | Linux Demostration application 1 Interface ID | `string` | `"defaultlinuxdemoapp1intid"` | no |
-| <a name="input_linux_demoapp2_interface_id"></a> [linux\_demoapp2\_interface\_id](#input\_linux\_demoapp2\_interface\_id) | Linux Demostration application 2 Interface ID | `string` | `"defaultlinuxdemoapp2intid"` | no |
 | <a name="input_location"></a> [location](#input\_location) | Azure Region objects will be deployed into | `string` | `"eastus"` | no |
 | <a name="input_memory_in_gb"></a> [memory\_in\_gb](#input\_memory\_in\_gb) | The amount of memory to allocate to each container in gigabytes. | `number` | `2` | no |
-| <a name="input_nginx_frontend_public_ip_id"></a> [nginx\_frontend\_public\_ip\_id](#input\_nginx\_frontend\_public\_ip\_id) | ID of the NGINXaaS frontend public IP. | `string` | `"nginxaasfrontendpubipid"` | no |
-| <a name="input_nginx_subnet_id"></a> [nginx\_subnet\_id](#input\_nginx\_subnet\_id) | The ID of the NGINXaaS Subnet. | `string` | `"nginxaassubnet"` | no |
-| <a name="input_nginx_user_id"></a> [nginx\_user\_id](#input\_nginx\_user\_id) | Managed NGINXaas user identity | `string` | `"managednginxaasuserid"` | no |
-| <a name="input_nginxaas_principal_id"></a> [nginxaas\_principal\_id](#input\_nginxaas\_principal\_id) | Principal ID the NGINXaaS user identity. | `string` | `"nginxaasprincipalid"` | no |
 | <a name="input_port"></a> [port](#input\_port) | Port to open on the container and the public IP address. | `number` | `80` | no |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource Group Name | `string` | `"somerandomstring"` | no |
 | <a name="input_restart_policy"></a> [restart\_policy](#input\_restart\_policy) | The behavior of Azure runtime if container has stopped. | `string` | `"Always"` | no |
 | <a name="input_sku"></a> [sku](#input\_sku) | SKU of NGINXaaS deployment | `string` | `"standard_Monthly"` | no |
 | <a name="input_ssh_key_file"></a> [ssh\_key\_file](#input\_ssh\_key\_file) | File where existing SSH key is used for loading on instance | `string` | n/a | yes |

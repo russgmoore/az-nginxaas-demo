@@ -23,8 +23,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_kv_secret_id"></a> [kv\_secret\_id](#input\_kv\_secret\_id) | The Key Vault Secrete ID for the example certificate | `string` | `"keyvaultsecreteid"` | no |
-| <a name="input_nginxaas_deployment_id"></a> [nginxaas\_deployment\_id](#input\_nginxaas\_deployment\_id) | NGINXaaS deployment ID | `string` | `"nginxaasdeploymentid"` | no |
+| <a name="input_kv_secret_id"></a> [kv\_secret\_id](#input\_kv\_secret\_id) | The Key Vault Secrete ID for the example certificate | `string` | n/a | yes |
+| <a name="input_nginxaas_deployment_id"></a> [nginxaas\_deployment\_id](#input\_nginxaas\_deployment\_id) | NGINXaaS deployment ID | `string` | n/a | yes |
 
 ## Outputs
 
