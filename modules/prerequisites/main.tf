@@ -1,9 +1,21 @@
+
+
+# We need to create an identity for NGINXaaS 
+# see: https://docs.nginx.com/nginxaas/azure/getting-started/managed-identity/
+resource "azurerm_user_assigned_identity" "id_nginxaas" {
+  location            = var.location
+  name                = "id_nginxaas-${var.pf}"
+  resource_group_name = var.resource_group_name 
+
+  tags = var.tags
+}
+
 # this Network Security Group allows port 80 and 443 and restricts port 22 to your 
 # public IP that we try to determine during the deployment
 resource "azurerm_network_security_group" "sg_allowedin" {
-  name                = "sg_allowedin"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  name                = "sg_allowedin-${var.pf}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
 
   security_rule {
     name                       = "http"
@@ -37,7 +49,7 @@ resource "azurerm_network_security_group" "sg_allowedin" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = data.external.myipaddr.result.ip
+    source_address_prefix      = var.my_ip_address
     destination_address_prefix = "*"
   }
 
@@ -46,18 +58,18 @@ resource "azurerm_network_security_group" "sg_allowedin" {
 
 # Create a public IP for NGINXaas
 resource "azurerm_public_ip" "pip_ngxaas" {
-  name                = "ngxaas_publicip"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  name                = "ngxaas_publicip-${var.pf}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
   sku                 = "Standard"
   allocation_method   = "Static"
 }
 
 # Create a Virtual Network in our resource group and assign the parent IP space
 resource "azurerm_virtual_network" "vnet_nginx" {
-  name                = "nginxvnet"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "nginxvnet-${var.pf}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
 
   tags = var.tags
@@ -65,8 +77,8 @@ resource "azurerm_virtual_network" "vnet_nginx" {
 
 # Create the first subnet for the demo servers and NGINXaas to talk to each other with
 resource "azurerm_subnet" "nginx_subnet" {
-  name                 = "nginx_subnet"
-  resource_group_name  = azurerm_resource_group.rg.name
+  name                 = "nginx_subnet-${var.pf}"
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet_nginx.name
   address_prefixes     = ["10.0.1.0/24"]
   delegation {
@@ -82,8 +94,8 @@ resource "azurerm_subnet" "nginx_subnet" {
 
 # Create the first subnet for the containers
 resource "azurerm_subnet" "container" {
-  name                 = "container"
-  resource_group_name  = azurerm_resource_group.rg.name
+  name                 = "container-${var.pf}"
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet_nginx.name
   address_prefixes     = ["10.0.2.0/24"]
   delegation {
@@ -105,21 +117,19 @@ resource "azurerm_subnet_network_security_group_association" "sg_assoc" {
 
 # Create a Public IP for the Demo_App_1 server so we can reach it
 resource "azurerm_public_ip" "pip_demo_app_1" {
-  name                = "demo_app_1_public_ip"
+  name                = "demoapp1_publicip-${var.pf}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
-
   tags = var.tags
 
-  depends_on = [azurerm_resource_group.rg]
 }
 
 # Create the Demo_App1 webserver network interface
 resource "azurerm_network_interface" "int_demo_app_1" {
-  name                = "demo_app_1_int"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "demoapp1_int-${var.pf}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   ip_configuration {
     name                          = "internal"
@@ -129,28 +139,23 @@ resource "azurerm_network_interface" "int_demo_app_1" {
     private_ip_address            = "10.0.1.10"
   }
 
-  depends_on = [azurerm_resource_group.rg]
-
   tags = var.tags
 }
 
 # Create a Public IP for the Demo_App2 server so we can reach it
 resource "azurerm_public_ip" "pip_demo_app_2" {
-  name                = "demo_app_2_public_ip"
+  name                = "demoapp2_publicip-${var.pf}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   allocation_method   = "Dynamic"
-
   tags = var.tags
-
-  depends_on = [azurerm_resource_group.rg]
 }
 
 # Create the Demo_App2 webserver network interface
 resource "azurerm_network_interface" "int_demo_app_2" {
-  name                = "demo_app_2_int"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "demoapp2_int-${var.pf}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   ip_configuration {
     name                          = "internal"
@@ -159,9 +164,6 @@ resource "azurerm_network_interface" "int_demo_app_2" {
     public_ip_address_id          = azurerm_public_ip.pip_demo_app_2.id
     private_ip_address            = "10.0.1.11"
   }
-
-  depends_on = [azurerm_resource_group.rg]
-
   tags = var.tags
 }
 

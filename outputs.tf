@@ -1,23 +1,29 @@
+/*
 output "container1_ipv4_address" {
   value = azurerm_container_group.container1.ip_address
 }
 output "container2_ipv4_address" {
   value = azurerm_container_group.container2.ip_address
 }
+*/
 output "demo_app_1_private_ip" {
-  value = azurerm_linux_virtual_machine.linuxapp-1.private_ip_address
+  description = "The Private IP address for Linux VM demonstration application 1"
+  value = module.linux_vm_apps.linux_demoapp1_private_ip
 }
 
 output "demo_app_1_public_ip" {
-  value = azurerm_linux_virtual_machine.linuxapp-1.public_ip_address
+  description = "The Public IP address for Linux VM demonstration application 1"
+  value = module.linux_vm_apps.linux_demoapp1_public_ip
 }
 
 output "demo_app_2_private_ip" {
-  value = azurerm_linux_virtual_machine.linuxapp-2.private_ip_address
+  description = "The Private IP address for Linux VM demonstration application 2"
+  value = module.linux_vm_apps.linux_demoapp2_private_ip
 }
 
 output "demo_app_2_public_ip" {
-  value = azurerm_linux_virtual_machine.linuxapp-2.public_ip_address
+  description = "The Public IP address for Linux VM demonstration application 2"
+  value = module.linux_vm_apps.linux_demoapp2_public_ip
 }
 
 output "my_public_ip" {
@@ -27,5 +33,10 @@ output "my_public_ip" {
 
 output "NGINX-ip_address" {
   description = "IP address of NGINXaaS deployment."
-  value       = azurerm_nginx_deployment.nginxaas-demo.ip_address
+  value       = module.prerequisites.nginx_frontend_public_ip
+}
+
+output "nginx_default_config_id" {
+  description = "ID of default config of the NGINXaaS instance"
+  value       = "${module.deployNGINXaaS.nginxaas_deployment_id}/configurations/default"
 }
