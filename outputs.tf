@@ -35,3 +35,8 @@ output "NGINX-ip_address" {
   description = "IP address of NGINXaaS deployment."
   value       = module.prerequisites.nginx_frontend_public_ip
 }
+
+output "nginx_default_config_id" {
+  description = "ID of default config of the NGINXaaS instance"
+  value       = "${module.deployNGINXaaS.nginxaas_deployment_id}/configurations/default"
+}

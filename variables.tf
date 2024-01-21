@@ -144,3 +144,8 @@ variable "linux_demoapp2_interface_id" {
   type        = string
   default     = "defaultlinuxdemoapp2intid"
 }
+
+variable "configure" {
+  description = "Workaround for Bug ID-891. Set false to skip configuration."
+  default     = true
+}

@@ -99,3 +99,21 @@ module "nginxcertificate" {
 
   depends_on = [ module.deployNGINXaaS, module.keyvault ]
 }
+
+module "configureNGINXaaS" {
+  source                   = "./modules/configureNGINXaaS"
+  nginxaas_deployment_id       = module.deployNGINXaaS.nginxaas_deployment_id
+  configure     = var.configure
+  config_files = {
+    base = {
+      virtual_path = "/etc/nginx/nginx.conf"
+      content      = filebase64("${path.module}/files/nginx.conf")
+    }
+    api = {
+      virtual_path = "/etc/nginx/site/api.conf"
+      content      = filebase64("${path.module}/files/api.conf")
+    }
+  }
+  depends_on = [module.nginxcertificate]
+}
+  

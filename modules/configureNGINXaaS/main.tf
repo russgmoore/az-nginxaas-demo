@@ -1,17 +1,14 @@
-/*
 resource "azurerm_nginx_configuration" "nginxaas-config" {
-  nginx_deployment_id = azurerm_nginx_deployment.nginxaas-demo.id
+  count               = var.configure ? 1 : 0
+  nginx_deployment_id = var.nginxaas_deployment_id
   root_file           = "/etc/nginx/nginx.conf"
 
-  config_file {
-    content      = filebase64("${path.module}/nginx.conf")
-    virtual_path = "/etc/nginx/nginx.conf"
-  }
+  dynamic "config_file" {
+    for_each = var.config_files
 
-  config_file {
-    content      = filebase64("${path.module}/api.conf")
-    virtual_path = "/etc/nginx/site/api.conf"
+    content {
+      content      = config_file.value["content"]
+      virtual_path = config_file.value["virtual_path"]
+    }
   }
 }
-*/
-# define the certificate in NGINXaaS
