@@ -1,11 +1,11 @@
-/*
 output "container1_ipv4_address" {
-  value = azurerm_container_group.container1.ip_address
+  value = module.containers.container1_ip
 }
+
 output "container2_ipv4_address" {
-  value = azurerm_container_group.container2.ip_address
+  value = module.containers.container2_ip
 }
-*/
+
 output "demo_app_1_private_ip" {
   description = "The Private IP address for Linux VM demonstration application 1"
   value = module.linux_vm_apps.linux_demoapp1_private_ip

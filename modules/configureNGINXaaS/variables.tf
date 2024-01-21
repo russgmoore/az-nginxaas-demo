@@ -1,4 +1,3 @@
-# Create a variable to contain the NGINXaaS deployment ID"
 variable "nginxaas_deployment_id" {
   description = "NGINXaaS deployment ID"
   type = string

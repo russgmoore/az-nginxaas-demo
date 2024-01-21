@@ -1,5 +1,5 @@
 resource "azurerm_nginx_deployment" "nginxaas-demo" {
-  name                     = "nginxaas-${var.pf}"
+  name                     = "nginxaas-${var.mypet}"
   resource_group_name      = var.resource_group_name
   sku                      = var.sku
   location                 = var.location

@@ -1,39 +1,21 @@
-# Create a random name for naming the Resource Group
 resource "random_pet" "pet" {
 }
 
 locals {
-  pf = random_pet.pet.id
-  resource_group_name = "rg-${local.pf}"
+  mypet = random_pet.pet.id
+  resource_group_name = "rg-${local.mypet}"
 }
 
-# Create a randomly named Resource Group
 resource "azurerm_resource_group" "rg" {
-  name     = local.resource_group_name
-  location = var.location
-  tags = var.tags
+  name                = local.resource_group_name
+  location            = var.location
+  tags                = var.tags
 }
 
-
-# Create a random string for container1 naming
-resource "random_string" "container_name1" {
-  length  = 25
-  lower   = true
-  upper   = false
-  special = false
-}
-
-# Create a random string for container2 naming
-resource "random_string" "container_name2" {
-  length  = 25
-  lower   = true
-  upper   = false
-  special = false
-}
 
 module "prerequisites" {
   source              = "./modules/prerequisites"
-  pf                  = local.pf
+  mypet               = local.mypet
   tags                = var.tags
   location            = var.location
   resource_group_name = local.resource_group_name 
@@ -45,7 +27,7 @@ module "prerequisites" {
 module "linux_vm_apps" {
   source               = "./modules/linuxvm"
   ssh_key_file         = var.ssh_key_file
-  pf                   = local.pf
+  mypet                = local.mypet
   tags                 = var.tags
   location             = var.location
   resource_group_name  = local.resource_group_name
@@ -57,7 +39,7 @@ module "linux_vm_apps" {
 
 module "containers" {
   source               = "./modules/containers"
-  pf                   = local.pf
+  mypet                = local.mypet
   tags                 = var.tags
   location             = var.location
   resource_group_name  = local.resource_group_name
@@ -70,7 +52,7 @@ module "deployNGINXaaS" {
   source                        = "./modules/deployNGINXaaS"
   sku                           = var.sku
   resource_group_name           = local.resource_group_name 
-  pf                            = local.pf
+  mypet                         = local.mypet
   tags                          = var.tags
   location                      = var.location
   nginx_user_id                 = module.prerequisites.nginxaas_user_id
@@ -84,7 +66,7 @@ module "deployNGINXaaS" {
 module "keyvault" {
   source                        = "./modules/keyvault"
   resource_group_name           = local.resource_group_name 
-  pf                            = local.pf
+  mypet                         = local.mypet
   tags                          = var.tags
   location                      = var.location
   nginxaas_principal_id         = module.prerequisites.nginxaas_principal_id
@@ -101,9 +83,9 @@ module "nginxcertificate" {
 }
 
 module "configureNGINXaaS" {
-  source                   = "./modules/configureNGINXaaS"
+  source                       = "./modules/configureNGINXaaS"
   nginxaas_deployment_id       = module.deployNGINXaaS.nginxaas_deployment_id
-  configure     = var.configure
+  configure                    = var.configure
   config_files = {
     base = {
       virtual_path = "/etc/nginx/nginx.conf"

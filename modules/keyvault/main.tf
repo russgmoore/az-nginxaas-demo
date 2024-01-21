@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 
 # This keyvault is NOT firewalled.
 resource "azurerm_key_vault" "keyvault" {
-  name                   = "keyvault-${var.pf}"
+  name                   = "keyvault-${var.mypet}"
   location               = var.location
   resource_group_name    = var.resource_group_name
   tenant_id           = data.azurerm_client_config.current.tenant_id

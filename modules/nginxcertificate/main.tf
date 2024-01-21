@@ -1,4 +1,3 @@
-# define the certificate in NGINXaaS
 resource "azurerm_nginx_certificate" "example" {
   name                     = "example-generated"
   nginx_deployment_id      = var.nginxaas_deployment_id

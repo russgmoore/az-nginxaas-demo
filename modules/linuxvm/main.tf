@@ -1,7 +1,7 @@
 
 resource "azurerm_linux_virtual_machine" "linuxapp-1" {
   size                = var.instance_size
-  name                = "linux_app1-${var.pf}"
+  name                = "linux_app1-${var.mypet}"
   resource_group_name = var.resource_group_name
   location            = var.location
   custom_data = base64encode(templatefile("${path.module}/userdata.tftpl", { nginxinstance = 1 }))
@@ -37,7 +37,7 @@ resource "azurerm_linux_virtual_machine" "linuxapp-1" {
 
 resource "azurerm_linux_virtual_machine" "linuxapp-2" {
   size                = var.instance_size
-  name                = "linux_app2-${var.pf}"
+  name                = "linux_app2-${var.mypet}"
   resource_group_name = var.resource_group_name
   location            = var.location
   custom_data         = base64encode(templatefile("${path.module}/userdata.tftpl", { nginxinstance = 2 }))

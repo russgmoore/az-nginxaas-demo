@@ -1,6 +1,6 @@
 # create container 1 
 resource "azurerm_container_group" "container1" {
-  name                = "container1-${var.pf}"
+  name                = "container1-${var.mypet}"
   location            = var.location
   resource_group_name = var.resource_group_name
   ip_address_type     = "Private"
@@ -10,7 +10,7 @@ resource "azurerm_container_group" "container1" {
   tags = var.tags
 
   container {
-    name   = "container1-${var.pf}"
+    name   = "container1-${var.mypet}"
     image  = var.image
     cpu    = var.cpu_cores
     memory = var.memory_in_gb
@@ -24,7 +24,7 @@ resource "azurerm_container_group" "container1" {
 
 # create container 2
 resource "azurerm_container_group" "container2" {
-  name                = "container2-${var.pf}"
+  name                = "container2-${var.mypet}"
   location            = var.location
   resource_group_name = var.resource_group_name
   ip_address_type     = "Private"
@@ -34,7 +34,7 @@ resource "azurerm_container_group" "container2" {
   tags = var.tags
 
   container {
-    name   = "container2-${var.pf}"
+    name   = "container2-${var.mypet}"
     image  = var.image
     cpu    = var.cpu_cores
     memory = var.memory_in_gb
