@@ -8,7 +8,27 @@ This can be used for demonstration purposes or for building a test platform to t
 ## Terraform settings
 Configure your terraform environment so that you can access your Azure tenant per your own taste.
 
+Refer to the F5 NGINXaaS Terraform site for more details on configuring your Terraform environment and 
+details on code snippets you may find included in this repo.
+
+https://docs.nginx.com/nginxaas/azure/client-tools/terraform/
+
 You'll need to run "terraform init" and I'd suggest a "terraform plan" to test before applying.
+You will need access to an Azure instance and have configured that access from your system for this
+demonstration code to run.
+
+https://learn.microsoft.com/en-us/azure/developer/terraform/authenticate-to-azure
+
+
+### Terraform
+
+```bash
+terraform init
+terraform plan
+terraform apply --var="configure=false" --auto-approve
+./importconfig.sh
+terraform apply --auto-approve
+```
 
 Configure the **settings.tfvars** file to customize the deployment. For F5'ers you must define your mail address 
 for the Owner tag or your resources may be deleted without notice.
