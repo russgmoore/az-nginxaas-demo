@@ -1,5 +1,10 @@
 # NGINXaaS deployed via Terraform onto Azure
 
+This repo and contained Terraform was built to created to build a new unique resource group,
+define and deploy resources such as VMs and containers and finally deploy NGINXaaS. 
+
+This can be used for demonstration purposes or for building a test platform to test rules and configuration items.
+
 ## Terraform settings
 Configure your terraform environment so that you can access your Azure tenant per your own taste.
 
@@ -9,6 +14,8 @@ Configure the **settings.tfvars** file to customize the deployment. For F5'ers y
 for the Owner tag or your resources may be deleted without notice.
 
 The code generates unique object names to avoid conflicts with others.
+The code also attempts to determine your public IP and inserts that into the Security Group for access control.  
+If you experience access problems to the deployment this may be a part of the problem.
 
 ## Two Demo APP VMs in module linuxvm
 Two ngninx OSS web servers are deployed. 
@@ -34,6 +41,8 @@ requests to the "NGINXaaS Public IP" and the /container URI.
 
 Echo servers are great to immmediately see all of the related headers and so on that the web servers see when
 you make a request reflected back to you in the page render.
+
+The two containers are configured so they will always deploy with the same IPs, 10.0.2.4 and 10.0.2.5.
 
 ## NGINXaaS deployment
 The NGINXaaS deployment is configured and set with a public IP and is ready to configure.
