@@ -147,5 +147,5 @@ variable "linux_demoapp2_interface_id" {
 
 variable "configure" {
   description = "Workaround for Bug ID-891. Set false to skip configuration."
-  default     = true
+  default     = false
 }

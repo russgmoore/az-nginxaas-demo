@@ -116,4 +116,3 @@ module "configureNGINXaaS" {
   }
   depends_on = [module.nginxcertificate]
 }
-  
